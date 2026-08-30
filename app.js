@@ -26,7 +26,54 @@ function setupRole(r,el){window.setupR=r;document.querySelectorAll('.sheet .chip
 function renderSetup(){let q=($('oq')?.value||'').toLowerCase(),r=window.setupR||'P',arr=PLAYERS.filter(p=>p.role===r&&(!q||p.name.toLowerCase().includes(q))).slice(0,100);$('setupList').innerHTML=arr.map(p=>`<div class="result" onclick="toggleObjective(${p.id})"><div class="head"><div><div class="name">${esc(p.name)}</div><div class="meta">${esc(p.team)} · Appetibilità: ${p.appeal??'—'}</div></div><div style="font-size:25px">${current.objectives.includes(p.id)?'★':'☆'}</div></div></div>`).join('')}
 function toggleObjective(id){let i=current.objectives.indexOf(id);if(i<0)current.objectives.push(id);else current.objectives.splice(i,1);persist();renderSetup()}
 function renderObjectives(){if(!current)return;let sold=new Set();current.teams.forEach(t=>t.players.forEach(p=>sold.add(p.id)));let arr=PLAYERS.filter(p=>p.role===objRole&&current.objectives.includes(p.id)).sort((a,b)=>(b.appeal??-1)-(a.appeal??-1));$('objList').innerHTML=arr.length?arr.map(p=>`<div class="result" onclick="openPlayer(${p.id})"><div class="head"><div><div class="name">${esc(p.name)}</div><div class="meta">${esc(p.team)} · ${sold.has(p.id)?'<span class="tag">Non disponibile</span>':'<span class="tag avail">Disponibile</span>'}</div></div><b>${p.appeal??'—'}</b></div></div>`).join(''):'<div class="empty">Nessun obiettivo impostato.</div>'}
-function renderArchive(){$('archiveList').innerHTML=db.length?db.map(a=>`<div class="card"><div class="head"><div><div class="h2" style="margin:0">${esc(a.name)}</div><div class="meta">${a.date} · ${a.teams.length} squadre · ${a.initialCredits} crediti</div></div><button class="btn primary" style="min-height:42px" onclick="openSaved(${a.id})">Apri</button></div></div>`).join(''):'<div class="empty">Nessuna asta salvata.</div>'}
-function openSaved(id){current=db.find(a=>a.id===id);persist();go('auction')}
+function deleteAuction(id){
+    let a=db.find(x=>x.id===id);
+    if(!a)return;
+
+    if(!confirm(`Eliminare definitivamente l'asta "${a.name}"?\n\nSaranno eliminati anche tutti gli acquisti e gli obiettivi salvati in quella asta.`))
+        return;
+
+    db=db.filter(x=>x.id!==id);
+
+    if(current && current.id===id){
+        current=db.length?db[0]:null;
+    }
+
+    persist();
+}
+
+function renderArchive(){
+    $('archiveList').innerHTML=db.length
+    ?db.map(a=>`
+        <div class="card">
+            <div class="head">
+                <div>
+                    <div class="h2" style="margin:0">${esc(a.name)}</div>
+                    <div class="meta">
+                        ${a.date} · ${a.teams.length} squadre · ${a.initialCredits} crediti
+                    </div>
+                </div>
+
+                <div style="display:flex;gap:7px">
+                    <button
+                        class="btn primary"
+                        style="min-height:42px;padding:8px 11px"
+                        onclick="openSaved(${a.id})">
+                        Apri
+                    </button>
+
+                    <button
+                        class="btn danger"
+                        style="min-height:42px;padding:8px 11px"
+                        onclick="deleteAuction(${a.id})"
+                        aria-label="Elimina asta">
+                        🗑️
+                    </button>
+                </div>
+            </div>
+        </div>
+    `).join('')
+    :'<div class="empty">Nessuna asta salvata.</div>'
+}
 render();
 if("serviceWorker" in navigator){navigator.serviceWorker.register("./sw.js").catch(()=>{});}
