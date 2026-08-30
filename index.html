@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827">
+<link rel="manifest" href="manifest.json">
+<title>Asta Fantacalcio</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{--bg:#f4f5f7;--card:#fff;--ink:#151b26;--muted:#697386;--line:#e3e6eb;--green:#08784f;--greenbg:#e8f6ef;--gold:#b97900;--red:#b53a31}
+html,body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",Arial,sans-serif}
+body{min-height:100vh}.app{width:100%;max-width:430px;margin:auto;min-height:100vh;padding-bottom:88px}
+.header{position:sticky;top:0;z-index:10;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;background:rgba(244,245,247,.95);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.head{display:flex;align-items:center;justify-content:space-between}.title{font-size:24px;font-weight:850}.sub{font-size:12px;color:var(--muted);margin-top:3px}
+.plus{width:42px;height:42px;border:0;border-radius:14px;background:var(--ink);color:#fff;font-size:26px}
+main{padding:14px}.screen{display:none}.screen.active{display:block}.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:15px;margin-bottom:12px;box-shadow:0 2px 10px rgba(20,30,45,.035)}
+.h2{font-size:18px;font-weight:850;margin:0 0 12px}.small{font-size:12px}.muted{color:var(--muted)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}.btn{min-height:46px;border:0;border-radius:13px;padding:10px 14px;font-size:15px;font-weight:800}.primary{background:var(--green);color:#fff}.secondary{background:#eceff2;color:var(--ink)}.danger{background:#fff0ee;color:var(--red)}
+input,select{width:100%;min-height:46px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:10px 12px;font-size:16px;color:var(--ink)}
+label{display:block;font-size:12px;font-weight:750;color:var(--muted);margin:10px 0 6px}.search{display:flex;gap:8px}.search input{flex:1;min-width:0}
+.result{padding:12px 2px;border-bottom:1px solid var(--line);cursor:pointer}.result:last-child{border-bottom:0}.name{font-size:16px;font-weight:850}.meta{font-size:12px;color:var(--muted);margin-top:4px}
+.tag{display:inline-flex;padding:4px 7px;border-radius:8px;background:#eef0f3;font-size:11px;font-weight:800;margin:2px 3px 0 0}.goal{background:#fff2c7;color:#765300}.avail{background:var(--greenbg);color:var(--green)}
+.teamrow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line)}.teamrow:last-child{border-bottom:0}.teamname{font-weight:850}.counts{font-size:11px;color:var(--muted);margin-top:4px}.budget{font-weight:850;white-space:nowrap}
+.playername{font-size:25px;font-weight:900}.kv{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:15px 0}.kvbox{background:#f7f8fa;border-radius:12px;padding:10px}.kvbox small{display:block;color:var(--muted);font-size:11px;margin-bottom:3px}.kvbox b{font-size:16px}
+.chips{display:flex;gap:8px;overflow:auto;padding-bottom:4px}.chip{min-width:54px;height:42px;border:0;border-radius:12px;background:#e9edf1;font-weight:850}.chip.active{background:var(--ink);color:#fff}
+.empty{text-align:center;padding:26px 8px;color:var(--muted);font-size:14px}
+.bottom{position:fixed;left:0;right:0;bottom:0;z-index:20;max-width:430px;margin:auto;display:flex;background:rgba(255,255,255,.96);backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:7px 6px calc(7px + env(safe-area-inset-bottom))}
+.nav{flex:1;border:0;background:none;color:#788190;font-size:10px;font-weight:800;padding:3px 2px}.nav.active{color:var(--green)}.navicon{display:block;font-size:20px;line-height:21px;margin-bottom:2px}
+.modal{display:none;position:fixed;inset:0;z-index:50;background:rgba(0,0,0,.44);align-items:flex-end}.modal.show{display:flex}.sheet{width:100%;max-width:430px;margin:auto auto 0;background:#fff;border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:92vh;overflow:auto}.handle{width:38px;height:4px;background:#d5d9df;border-radius:5px;margin:-4px auto 14px}
+@media(min-width:431px){body{padding:15px 0}.app{border-radius:22px;overflow:hidden;box-shadow:0 10px 45px rgba(0,0,0,.08)}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header"><div class="head"><div><div class="title">Asta Fantacalcio</div><div class="sub" id="sub">Nessuna asta aperta</div></div><button class="plus" onclick="newAuction()">+</button></div></header>
+<main>
+<section id="home" class="screen active">
+<div class="card"><div class="h2" id="welcome">Benvenuto</div><div class="muted small">Crea una nuova asta oppure continua un'asta salvata.</div><div class="grid2" style="margin-top:14px"><button class="btn primary" onclick="newAuction()">＋ Nuova asta</button><button class="btn secondary" onclick="go('archive')">📂 Archivio</button></div></div>
+<div id="homeDash"></div>
+</section>
+<section id="auction" class="screen">
+<div class="card"><div class="h2">🔎 Cerca calciatore</div><div class="search"><input id="q" autocomplete="off" placeholder="Nome o parte del nome…" oninput="searchPlayers()"><button class="btn primary" onclick="searchPlayers()">Cerca</button></div><div id="results"></div></div>
+<div class="card"><div class="head"><div class="h2" style="margin:0">Squadre</div><button class="btn secondary" style="min-height:40px;padding:7px 11px" onclick="go('teams')">Dettagli</button></div><div id="miniTeams"></div></div>
+</section>
+<section id="teams" class="screen"><div class="head"><div class="h2">👥 Squadre</div><button class="btn secondary" style="min-height:40px" onclick="go('auction')">← Asta</button></div><div id="teamsList"></div></section>
+<section id="objectives" class="screen"><div class="head"><div class="h2">🎯 Obiettivi</div><button class="btn secondary" style="min-height:40px" onclick="editObjectives()">✏️ Modifica</button></div><div class="chips"><button class="chip active" onclick="setRole('P',this)">P</button><button class="chip" onclick="setRole('D',this)">D</button><button class="chip" onclick="setRole('C',this)">C</button><button class="chip" onclick="setRole('A',this)">A</button></div><div class="card" id="objList" style="margin-top:12px"></div></section>
+<section id="archive" class="screen"><div class="head"><div class="h2">📂 Archivio aste</div><button class="btn primary" style="min-height:40px" onclick="newAuction()">＋ Nuova</button></div><div id="archiveList"></div></section>
+</main>
+<nav class="bottom"><button class="nav active" data-s="home" onclick="go('home')"><span class="navicon">⌂</span>Home</button><button class="nav" data-s="auction" onclick="go('auction')"><span class="navicon">⌕</span>Asta</button><button class="nav" data-s="teams" onclick="go('teams')"><span class="navicon">👥</span>Squadre</button><button class="nav" data-s="objectives" onclick="go('objectives')"><span class="navicon">★</span>Obiettivi</button></nav>
+</div>
+<div class="modal" id="modal"><div class="sheet"><div class="handle"></div><div id="sheet"></div></div></div>
+<script src="players.js"></script><script src="app.js"></script>
+</body></html>
