@@ -1,0 +1,1370 @@
+<!doctype html>
+<html lang="it">
+
+<head>
+
+<meta charset="utf-8">
+
+<meta name="viewport"
+content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<meta name="theme-color" content="#111827">
+
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icon.svg">
+
+<title>Asta Fantacalcio</title>
+
+
+<style>
+
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --bg:#f4f5f7;
+  --card:#fff;
+  --ink:#151b26;
+  --muted:#697386;
+  --line:#e3e6eb;
+  --green:#08784f;
+  --greenbg:#e8f6ef;
+  --gold:#b97900;
+  --red:#b53a31;
+}
+
+html,
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    Arial,
+    sans-serif;
+}
+
+body{
+  min-height:100vh;
+}
+
+.app{
+  width:100%;
+  max-width:430px;
+  margin:auto;
+  min-height:100vh;
+  padding-bottom:58px;
+}
+
+
+/* HEADER */
+
+.header{
+  position:sticky;
+  top:0;
+  z-index:10;
+
+  padding:
+    calc(8px + env(safe-area-inset-top))
+  16px
+  8px;
+
+  background:rgba(244,245,247,.95);
+
+  backdrop-filter:blur(18px);
+
+  border-bottom:1px solid var(--line);
+}
+
+.head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.title{
+  font-size:24px;
+  font-weight:850;
+}
+
+.sub{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:3px;
+}
+
+.plus{
+  width:42px;
+  height:42px;
+
+  border:0;
+  border-radius:14px;
+
+  background:var(--ink);
+  color:#fff;
+
+  font-size:26px;
+}
+
+
+/* CONTENUTO */
+
+main{
+  padding:6px 14px 14px;
+}
+
+.screen{
+  display:none;
+}
+
+.screen.active{
+  display:block;
+}
+
+.card{
+
+  background:var(--card);
+
+  border:1px solid var(--line);
+
+  border-radius:18px;
+
+  padding:15px;
+
+  margin-bottom:12px;
+
+  box-shadow:
+    0 2px 10px
+    rgba(20,30,45,.035);
+}
+
+/* ASTA: avvicina al massimo il blocco Cerca a quello Squadre */
+#auction > .card:first-child{
+  padding:8px 15px;
+  margin-bottom:2px;
+}
+
+/* ASTA: compatta la sezione di ricerca senza ridurre i font */
+#auction > .card:first-child .search input,
+#auction > .card:first-child .search .btn{
+  min-height:42px;
+}
+
+#auction > .card:first-child .search .btn{
+  padding:8px 14px;
+}
+
+/* ASTA: porta più in alto l'intestazione del blocco Squadre */
+#auction > .card:nth-child(2){
+  padding-top:10px;
+}
+
+
+.h2{
+  font-size:18px;
+  font-weight:850;
+  margin:0 0 12px;
+}
+
+.small{
+  font-size:12px;
+}
+
+.muted{
+  color:var(--muted);
+}
+
+
+/* BOTTONI */
+
+.grid2{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:9px;
+}
+
+.btn{
+
+  min-height:46px;
+
+  border:0;
+  border-radius:13px;
+
+  padding:10px 14px;
+
+  font-size:15px;
+  font-weight:800;
+}
+
+.primary{
+  background:var(--green);
+  color:#fff;
+}
+
+.secondary{
+  background:#eceff2;
+  color:var(--ink);
+}
+
+.danger{
+  background:#fff0ee;
+  color:var(--red);
+}
+
+
+/* INPUT */
+
+input,
+select{
+
+  width:100%;
+
+  min-height:46px;
+
+  border:1px solid var(--line);
+
+  border-radius:12px;
+
+  background:#fff;
+
+  padding:10px 12px;
+
+  font-size:16px;
+
+  color:var(--ink);
+}
+
+label{
+
+  display:block;
+
+  font-size:12px;
+
+  font-weight:750;
+
+  color:var(--muted);
+
+  margin:10px 0 6px;
+}
+
+
+/* RICERCA */
+
+.search{
+  display:flex;
+  gap:8px;
+}
+
+.search input{
+  flex:1;
+  min-width:0;
+}
+
+
+/* RISULTATI */
+
+.result{
+
+  padding:12px 2px;
+
+  border-bottom:1px solid var(--line);
+
+  cursor:pointer;
+}
+
+.result:last-child{
+  border-bottom:0;
+}
+
+.name{
+  font-size:16px;
+  font-weight:850;
+}
+
+.meta{
+  font-size:12px;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+
+/* ETICHETTE */
+
+.tag{
+
+  display:inline-flex;
+
+  padding:4px 7px;
+
+  border-radius:8px;
+
+  background:#eef0f3;
+
+  font-size:11px;
+
+  font-weight:800;
+
+  margin:2px 3px 0 0;
+}
+
+.goal{
+  background:#fff2c7;
+  color:#765300;
+}
+
+.avail{
+  background:var(--greenbg);
+  color:var(--green);
+}
+
+
+/* =========================
+   SQUADRE
+========================= */
+
+.teamrow{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:space-between;
+
+  padding:4px 0;
+
+  border-bottom:1px solid var(--line);
+
+  min-height:45px;
+}
+
+.teamrow:last-child{
+  border-bottom:0;
+}
+
+.teamname{
+
+  font-weight:850;
+
+  font-size:16px;
+
+  line-height:18px;
+}
+
+.counts{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:4px;
+
+  margin-top:3px;
+
+  color:var(--muted);
+}
+
+.countpill{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  min-width:34px;
+
+  height:26px;
+
+  padding:0 5px;
+
+  border-radius:7px;
+
+  background:#f0f2f4;
+
+  font-size:13px;
+
+  line-height:15px;
+
+  font-weight:800;
+}
+
+.countpill b{
+
+  color:var(--green);
+
+  margin-right:2px;
+}
+
+.totalcount{
+
+  font-size:14px;
+
+  font-weight:800;
+
+  margin-left:4px;
+}
+
+.budget{
+
+  font-weight:900;
+
+  font-size:20px;
+
+  white-space:nowrap;
+
+  margin-left:8px;
+}
+
+
+/* CALCIATORE */
+
+.playername{
+
+  font-size:25px;
+
+  font-weight:900;
+}
+
+.kv{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:8px;
+
+  margin:15px 0;
+}
+
+.kvbox{
+
+  background:#f7f8fa;
+
+  border-radius:12px;
+
+  padding:10px;
+}
+
+.kvbox small{
+
+  display:block;
+
+  color:var(--muted);
+
+  font-size:11px;
+
+  margin-bottom:3px;
+}
+
+.kvbox b{
+  font-size:16px;
+}
+
+
+/* OBIETTIVI */
+
+.chips{
+
+  display:grid;
+
+  grid-template-columns:repeat(4,minmax(0,1fr));
+
+  gap:8px;
+
+  width:100%;
+
+  overflow:visible;
+
+  padding-bottom:4px;
+}
+
+.chip{
+
+  width:100%;
+
+  min-width:0;
+
+  height:42px;
+
+  border:0;
+
+  border-radius:12px;
+
+  background:#e9edf1;
+
+  font-weight:850;
+}
+
+.chip.active{
+
+  background:var(--ink);
+
+  color:#fff;
+}
+
+
+/* FILTRO DISPONIBILITÀ OBIETTIVI */
+
+.objective-tabs{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:8px;
+
+  margin-top:8px;
+}
+
+.objective-tab{
+
+  min-height:38px;
+
+  border:1px solid var(--line);
+
+  border-radius:11px;
+
+  background:#fff;
+
+  color:var(--muted);
+
+  font-size:13px;
+
+  font-weight:850;
+}
+
+.objective-tab.active{
+
+  background:var(--greenbg);
+
+  border-color:#ccebdd;
+
+  color:var(--green);
+}
+
+.objective-tab.unavailable.active{
+
+  background:#fff0ee;
+
+  border-color:#f0d3cf;
+
+  color:var(--red);
+}
+
+
+/* VUOTO */
+
+.empty{
+
+  text-align:center;
+
+  padding:26px 8px;
+
+  color:var(--muted);
+
+  font-size:14px;
+}
+
+
+/* MENU IN BASSO */
+
+.bottom{
+
+  position:fixed;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  z-index:20;
+
+  max-width:430px;
+
+  height:58px;
+
+  margin:auto;
+
+  display:flex;
+
+  align-items:center;
+
+  background:rgba(255,255,255,.96);
+
+  backdrop-filter:blur(18px);
+
+  border-top:1px solid var(--line);
+
+  padding:0 6px;
+}
+
+.nav{
+
+  flex:1;
+
+  height:58px;
+
+  min-height:0;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  justify-content:center;
+
+  border:0;
+
+  background:none;
+
+  color:#788190;
+
+  font-size:10px;
+
+  font-weight:800;
+
+  padding:0 2px;
+}
+
+.nav.active{
+  color:var(--green);
+}
+
+.navicon{
+
+  display:block;
+
+  font-size:20px;
+
+  line-height:20px;
+
+  margin-bottom:1px;
+}
+
+
+/* MODALE */
+
+.modal{
+
+  display:none;
+
+  position:fixed;
+
+  inset:0;
+
+  z-index:50;
+
+  background:rgba(0,0,0,.44);
+
+  align-items:flex-end;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.sheet{
+
+  width:100%;
+
+  max-width:430px;
+
+  margin:auto auto 0;
+
+  background:#fff;
+
+  border-radius:22px 22px 0 0;
+
+  padding:
+    18px
+    16px
+    calc(18px + env(safe-area-inset-bottom));
+
+  max-height:92vh;
+
+  overflow:auto;
+}
+
+.handle{
+
+  width:38px;
+
+  height:4px;
+
+  background:#d5d9df;
+
+  border-radius:5px;
+
+  margin:-4px auto 14px;
+}
+
+
+.auction-actions{
+  display:flex;
+  gap:7px;
+  align-items:center;
+}
+
+/* =========================
+   OBIETTIVI ANCORA DISPONIBILI
+========================= */
+
+.objective-remaining{
+  margin-top:14px;
+  padding:11px 14px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background:#fff;
+}
+
+.objective-remaining-main{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  font-weight:800;
+}
+
+.objective-remaining-main strong{
+  font-size:24px;
+  line-height:1;
+}
+
+.objective-remaining small{
+  display:block;
+  margin-top:5px;
+  color:var(--muted);
+  line-height:1.3;
+}
+
+/* =========================
+   CONSIGLIO OFFERTA
+========================= */
+
+.offer-advice{
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:14px;
+  background:var(--greenbg);
+  border:1px solid var(--line);
+}
+
+.offer-advice-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  font-weight:800;
+}
+
+.offer-advice-row strong{
+  font-size:22px;
+}
+
+.offer-advice small{
+  display:block;
+  margin-top:4px;
+  color:var(--muted);
+  line-height:1.3;
+}
+
+/* =========================
+   NOTE CALCIATORE
+========================= */
+
+.player-notes{
+  margin-top:14px;
+}
+
+.player-notes label{
+  display:block;
+  font-weight:800;
+  margin-bottom:6px;
+}
+
+.player-notes textarea{
+  width:100%;
+  min-height:76px;
+  resize:vertical;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:10px 12px;
+  font:inherit;
+  color:var(--ink);
+  background:#fff;
+}
+
+.note-actions{
+  width:100%;
+  display:grid;
+  place-items:center;
+  margin-top:7px;
+  position:relative;
+}
+
+.note-actions .btn{
+  min-height:38px;
+  padding:7px 12px;
+}
+
+.note-actions #noteStatus{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:100%;
+  margin-top:4px;
+  white-space:nowrap;
+}
+
+/* =========================
+   PRIORITÀ OBIETTIVI
+========================= */
+
+.objective-priority{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:1px;
+  min-width:88px;
+  padding:4px 6px;
+  border-radius:10px;
+  background:rgba(0,0,0,.04);
+  cursor:pointer;
+  user-select:none;
+}
+
+.objective-priority span{
+  font-size:21px;
+  line-height:22px;
+}
+
+.objective-priority small{
+  font-size:10px;
+  line-height:12px;
+  color:var(--muted);
+  text-align:center;
+  font-weight:700;
+}
+
+/* =========================
+   ASTA LIVE
+========================= */
+
+.live-title{
+  font-size:18px;
+  font-weight:900;
+  margin-top:4px;
+}
+
+.live-player-note{
+  color:var(--muted);
+  font-size:13px;
+  margin:4px 0 12px;
+}
+
+.live-teams{
+  display:grid;
+  gap:7px;
+  margin-bottom:8px;
+}
+
+.live-team{
+  width:100%;
+  min-height:54px;
+  border:1px solid var(--line);
+  border-radius:13px;
+  background:#fff;
+  color:var(--ink);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  text-align:left;
+  padding:8px 12px;
+}
+
+.live-team span{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+}
+
+.live-team b{
+  font-size:15px;
+}
+
+.live-team small{
+  color:var(--muted);
+  font-size:11px;
+}
+
+.live-team strong{
+  font-size:20px;
+  color:var(--green);
+}
+
+.live-team.selected{
+  background:var(--greenbg);
+  border-color:var(--green);
+  box-shadow:0 0 0 2px rgba(8,120,79,.12);
+}
+
+.live-team.blocked{
+  opacity:.42;
+}
+
+.live-team.blocked strong{
+  color:var(--muted);
+}
+
+/* DESKTOP */
+
+@media(min-width:431px){
+
+  body{
+    padding:15px 0;
+  }
+
+  .app{
+
+    border-radius:22px;
+
+    overflow:hidden;
+
+    box-shadow:
+      0 10px 45px
+      rgba(0,0,0,.08);
+  }
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+<div class="app">
+
+
+<header class="header">
+
+  <div class="head">
+
+    <div>
+
+      <div class="title">
+        Asta Fantacalcio
+      </div>
+
+      <div class="sub" id="sub">
+        Nessuna asta aperta
+      </div>
+
+    </div>
+
+    <button
+      class="plus"
+      onclick="newAuction()">
+      +
+    </button>
+
+  </div>
+
+</header>
+
+
+
+<main>
+
+
+<!-- HOME -->
+
+<section id="home" class="screen active">
+
+  <div class="card">
+
+    <div
+      class="h2"
+      id="welcome">
+
+      Benvenuto
+
+    </div>
+
+    <div class="muted small">
+
+      Crea una nuova asta oppure continua un'asta salvata.
+
+    </div>
+
+
+    <div
+      class="grid2"
+      style="margin-top:14px">
+
+      <button
+        class="btn primary"
+        onclick="newAuction()">
+
+        ＋ Nuova asta
+
+      </button>
+
+
+      <button
+        class="btn secondary"
+        onclick="go('archive')">
+
+        📂 Archivio
+
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <div id="homeDash"></div>
+
+</section>
+
+
+
+<!-- =========================
+     ASTA
+========================= -->
+
+<section id="auction" class="screen">
+
+
+  <!-- RICERCA -->
+
+  <div class="card">
+
+    <div class="search">
+
+      <input
+        id="q"
+        autocomplete="off"
+        placeholder="Cerca giocatore o parte del nome…"
+        oninput="searchPlayers()">
+
+
+      <button
+        class="btn primary"
+        style="min-width:92px"
+        onclick="searchPlayers()">
+
+        Cerca
+
+      </button>
+
+    </div>
+
+
+    <!-- Suggerimenti ricerca -->
+
+    <div id="results"></div>
+
+  </div>
+
+
+
+  <!-- SQUADRE -->
+
+  <div class="card">
+
+    <div class="head">
+
+      <div
+        class="h2"
+        style="margin:0">
+
+        Squadre
+
+      </div>
+
+
+      <div class="auction-actions">
+
+        <button
+          class="btn secondary"
+          style="min-height:40px;padding:7px 11px"
+          onclick="openHistory()">
+
+          📜 Storico
+
+        </button>
+
+        <button
+          class="btn secondary"
+          style="min-height:40px;padding:7px 11px"
+          onclick="go('teams')">
+
+          Dettagli
+
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div id="miniTeams"></div>
+
+  </div>
+
+
+
+</section>
+
+
+
+<!-- SQUADRE DETTAGLIO -->
+
+<section id="teams" class="screen">
+
+  <div class="head">
+
+    <div class="h2">
+      👥 Squadre
+    </div>
+
+
+    <button
+      class="btn secondary"
+      style="min-height:40px"
+      onclick="go('auction')">
+
+      ← Asta
+
+    </button>
+
+  </div>
+
+
+  <div id="teamsList"></div>
+
+</section>
+
+
+
+<!-- OBIETTIVI -->
+
+<section id="objectives" class="screen">
+
+  <div class="head">
+
+    <div class="h2">
+      🎯 Obiettivi
+    </div>
+
+
+    <button
+      class="btn secondary"
+      style="min-height:40px"
+      onclick="editObjectives()">
+
+      ✏️ Modifica
+
+    </button>
+
+  </div>
+
+
+
+  <div class="chips">
+
+    <button
+      class="chip active"
+      onclick="setRole('P',this)">
+      P
+    </button>
+
+
+    <button
+      class="chip"
+      onclick="setRole('D',this)">
+      D
+    </button>
+
+
+    <button
+      class="chip"
+      onclick="setRole('C',this)">
+      C
+    </button>
+
+
+    <button
+      class="chip"
+      onclick="setRole('A',this)">
+      A
+    </button>
+
+  </div>
+
+
+  <div class="objective-tabs">
+
+    <button
+      class="objective-tab active"
+      data-obj-status="available"
+      onclick="setObjectiveStatus('available',this)">
+
+      Disponibili
+
+    </button>
+
+
+    <button
+      class="objective-tab unavailable"
+      data-obj-status="unavailable"
+      onclick="setObjectiveStatus('unavailable',this)">
+
+      Non disponibili
+
+    </button>
+
+  </div>
+
+
+  <div
+    class="card"
+    id="objList"
+    style="margin-top:12px">
+
+  </div>
+
+</section>
+
+
+
+<!-- ARCHIVIO -->
+
+<section id="archive" class="screen">
+
+  <div class="head">
+
+    <div class="h2">
+      📂 Archivio aste
+    </div>
+
+
+    <button
+      class="btn primary"
+      style="min-height:40px"
+      onclick="newAuction()">
+
+      ＋ Nuova
+
+    </button>
+
+  </div>
+
+
+  <div id="archiveList"></div>
+
+</section>
+
+
+</main>
+
+
+
+<!-- MENU -->
+
+<nav class="bottom">
+
+
+  <button
+    class="nav active"
+    data-s="home"
+    onclick="go('home')">
+
+    <span class="navicon">⌂</span>
+
+    Home
+
+  </button>
+
+
+
+  <button
+    class="nav"
+    data-s="auction"
+    onclick="go('auction')">
+
+    <span class="navicon">⌕</span>
+
+    Asta
+
+  </button>
+
+
+
+  <button
+    class="nav"
+    data-s="teams"
+    onclick="go('teams')">
+
+    <span class="navicon">👥</span>
+
+    Squadre
+
+  </button>
+
+
+
+  <button
+    class="nav"
+    data-s="objectives"
+    onclick="go('objectives')">
+
+    <span class="navicon">★</span>
+
+    Obiettivi
+
+  </button>
+
+
+</nav>
+
+
+</div>
+
+
+
+<!-- FINESTRA MODALE -->
+
+<div
+  class="modal"
+  id="modal">
+
+  <div class="sheet">
+
+    <div class="handle"></div>
+
+    <div id="sheet"></div>
+
+  </div>
+
+</div>
+
+
+
+<script src="players.js"></script>
+
+<script src="app.js"></script>
+
+
+</body>
+
+</html>
