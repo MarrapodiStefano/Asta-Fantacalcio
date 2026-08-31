@@ -469,18 +469,24 @@ label{
 
 .chips{
 
-  display:flex;
+  display:grid;
+
+  grid-template-columns:repeat(4,minmax(0,1fr));
 
   gap:8px;
 
-  overflow:auto;
+  width:100%;
+
+  overflow:visible;
 
   padding-bottom:4px;
 }
 
 .chip{
 
-  min-width:54px;
+  width:100%;
+
+  min-width:0;
 
   height:42px;
 
