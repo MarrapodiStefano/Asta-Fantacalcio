@@ -1713,7 +1713,18 @@ function toggleObjective(id){
     }
 
 
-    persist();
+    /* Salva senza ridisegnare tutta l'app:
+       così la finestra "Imposta obiettivi" resta aperta. */
+
+    localStorage.setItem(
+        'AF_DB',
+        JSON.stringify(db)
+    );
+
+    localStorage.setItem(
+        'AF_CURRENT',
+        JSON.stringify(current)
+    );
 
 
     renderSetup();
