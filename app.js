@@ -927,8 +927,8 @@ function openPlayer(id, source){
                 current.objectives.includes(p.id)
 
                 ? `
-                    <span class="tag goal">
-                        🎯 OBIETTIVO
+                    <span class="tag goal" title="${PRIORITIES[objectivePriority(p.id)].label}">
+                        ${PRIORITIES[objectivePriority(p.id)].icon}
                     </span>
                   `
 
