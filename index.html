@@ -144,7 +144,18 @@ main{
 
 /* ASTA: avvicina al massimo il blocco Cerca a quello Squadre */
 #auction > .card:first-child{
+  padding:8px 15px;
   margin-bottom:2px;
+}
+
+/* ASTA: compatta la sezione di ricerca senza ridurre i font */
+#auction > .card:first-child .search input,
+#auction > .card:first-child .search .btn{
+  min-height:42px;
+}
+
+#auction > .card:first-child .search .btn{
+  padding:8px 14px;
 }
 
 
