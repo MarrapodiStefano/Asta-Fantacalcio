@@ -863,6 +863,49 @@ function savePlayerNote(id){
 }
 
 /* =========================
+   CONSIGLIO OFFERTA
+========================= */
+
+function recommendedOffer(player){
+
+    const credits = Number(player.credits);
+    const pmv = Number(player.pmv);
+
+    /* Se il PMV non è disponibile, usiamo la tua valutazione. */
+    let base;
+
+    if(Number.isFinite(credits) && Number.isFinite(pmv)){
+        base = credits * 0.70 + pmv * 0.30;
+    }
+    else if(Number.isFinite(credits)){
+        base = credits;
+    }
+    else if(Number.isFinite(pmv)){
+        base = pmv;
+    }
+    else{
+        return null;
+    }
+
+
+    let multiplier = 1;
+
+    if(current.objectives?.includes(player.id)){
+
+        const priority = objectivePriority(player.id);
+
+        if(priority === 'max') multiplier = 1.10;
+        if(priority === 'high') multiplier = 1.05;
+
+    }
+
+
+    return Math.max(1, Math.round(base * multiplier));
+
+}
+
+
+/* =========================
    SCHEDA CALCIATORE
 ========================= */
 
@@ -968,10 +1011,10 @@ function openPlayer(id, source){
 
             <div class="kvbox">
 
-                <small>Prezzo medio %</small>
+                <small>PMV</small>
 
                 <b>
-                    ${pct(p.pmv)}
+                    ${p.pmv ?? '—'}
                 </b>
 
             </div>
@@ -990,6 +1033,26 @@ function openPlayer(id, source){
 
 
         </div>
+
+
+        <div class="offer-advice">
+
+            <div class="offer-advice-row">
+
+                <span>💡 Offerta consigliata</span>
+
+                <strong>
+                    ${recommendedOffer(p) ?? '—'}
+                </strong>
+
+            </div>
+
+            <small>
+                Basata su CREDITI, PMV e sulla priorità assegnata al giocatore.
+            </small>
+
+        </div>
+
 
         <div class="player-notes">
 
