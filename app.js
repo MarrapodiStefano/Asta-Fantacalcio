@@ -2009,6 +2009,72 @@ function renderArchive(){
 
 render();
 
+checkListoneVersion();
+
+
+/* =========================
+   CONTROLLO AGGIORNAMENTO LISTONE
+========================= */
+
+async function checkListoneVersion(){
+
+    try{
+
+        const res = await fetch(
+            `./listone-version.json?ts=${Date.now()}`,
+            { cache:'no-store' }
+        );
+
+        if(!res.ok) return;
+
+        const info = await res.json();
+
+        const version = String(
+            info.version || ''
+        );
+
+        if(!version) return;
+
+        const key = 'AF_LISTONE_VERSION';
+
+        const previous = localStorage.getItem(key);
+
+
+        /* Primo avvio: memorizza la versione senza disturbare */
+
+        if(!previous){
+
+            localStorage.setItem(key, version);
+
+            return;
+
+        }
+
+
+        /* Nuovo listone disponibile */
+
+        if(previous !== version){
+
+            localStorage.setItem(key, version);
+
+            alert(
+                'È disponibile un nuovo Listone.\n\n' +
+                'L’app verrà aggiornata mantenendo tutte le tue aste, gli acquisti e gli obiettivi salvati.'
+            );
+
+            window.location.reload();
+
+        }
+
+    }
+
+    catch(e){
+
+        /* Offline o controllo non disponibile: l'app continua normalmente */
+
+    }
+
+}
 
 
 /* SERVICE WORKER */
