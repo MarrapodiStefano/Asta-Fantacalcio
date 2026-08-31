@@ -40,7 +40,7 @@ label{display:block;font-size:12px;font-weight:750;color:var(--muted);margin:10p
 <div id="homeDash"></div>
 </section>
 <section id="auction" class="screen">
-<div class="card"><div class="h2">🔎 Cerca calciatore</div><div class="search"><input id="q" autocomplete="off" placeholder="Nome o parte del nome…" oninput="searchPlayers()"><button class="btn primary" onclick="searchPlayers()">Cerca</button></div><div id="results"></div></div>
+<div class="card"><div class="search"><input id="q" autocomplete="off" placeholder="Cerca giocatore o parte del nome…" oninput="searchPlayers()">
 <div class="card"><div class="head"><div class="h2" style="margin:0">Squadre</div><button class="btn secondary" style="min-height:40px;padding:7px 11px" onclick="go('teams')">Dettagli</button></div><div id="miniTeams"></div></div>
 </section>
 <section id="teams" class="screen"><div class="head"><div class="h2">👥 Squadre</div><button class="btn secondary" style="min-height:40px" onclick="go('auction')">← Asta</button></div><div id="teamsList"></div></section>
