@@ -866,7 +866,7 @@ function savePlayerNote(id){
    SCHEDA CALCIATORE
 ========================= */
 
-function openPlayer(id){
+function openPlayer(id, source){
 
     let p =
         PLAYERS.find(x => x.id == id);
@@ -1024,7 +1024,11 @@ function openPlayer(id){
 
 
         ${ 
-            rec
+            source === 'objectives'
+
+            ? ''
+
+            : rec
 
             ? `
 
@@ -2101,7 +2105,7 @@ function renderObjectives(){
 
             <div
                 class="result"
-                onclick="openPlayer(${p.id})">
+                onclick="openPlayer(${p.id}, 'objectives')">
 
 
                 <div class="head">
