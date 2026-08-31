@@ -923,6 +923,18 @@ label{
   color:var(--muted);
 }
 
+/* FORMAZIONI */
+.teamrow-actions{display:flex;align-items:center;gap:8px}
+.ball-btn{width:42px;height:42px;min-width:42px;border-radius:12px;border:1px solid var(--line);background:#fff;font-size:20px;display:flex;align-items:center;justify-content:center}
+.formation-controls{display:flex;align-items:center;gap:10px;margin:10px 0 14px}
+.formation-controls label{font-weight:800}.formation-controls select{flex:1;margin:0}
+.pitch{position:relative;min-height:520px;border-radius:22px;overflow:hidden;border:3px solid #fff;background:linear-gradient(90deg,transparent 49.6%,rgba(255,255,255,.8) 49.6%,rgba(255,255,255,.8) 50.4%,transparent 50.4%),radial-gradient(circle at 50% 50%,transparent 0 48px,rgba(255,255,255,.8) 49px 51px,transparent 52px),linear-gradient(#198754,#107c45)}
+.formation-line{position:absolute;left:8px;right:8px;display:flex;justify-content:space-around}
+.formation-player{width:74px;text-align:center;color:#fff;font-size:11px;font-weight:800;text-shadow:0 1px 2px rgba(0,0,0,.6)}
+.formation-shirt{width:42px;height:42px;margin:0 auto 3px;border-radius:50% 50% 42% 42%;background:#fff;color:#126b3e;display:flex;align-items:center;justify-content:center;font-size:15px;box-shadow:0 2px 6px rgba(0,0,0,.25);text-shadow:none}
+.formation-bench-card{margin-top:14px;padding:14px;border:1px solid var(--line);border-radius:16px;background:#fff}
+.bench-list{display:flex;flex-wrap:wrap;gap:8px}.bench-player{padding:8px 10px;border-radius:11px;background:var(--greenbg);font-size:12px;font-weight:700}.bench-player small{color:var(--muted);margin-left:4px}
+
 /* DESKTOP */
 
 @media(min-width:431px){
@@ -1155,6 +1167,23 @@ label{
 </section>
 
 
+
+<!-- FORMAZIONE -->
+<section id="formation" class="screen">
+  <div class="head">
+    <div class="h2" id="formationTitle">⚽ Formazione</div>
+    <button class="btn secondary" style="min-height:40px" onclick="go('teams')">← Squadre</button>
+  </div>
+  <div class="formation-controls">
+    <label for="formationModule">Modulo</label>
+    <select id="formationModule" onchange="setFormationModule(this.value)"></select>
+  </div>
+  <div id="pitch"></div>
+  <div class="formation-bench-card">
+    <div class="h2" style="margin:0 0 10px">🪑 Panchina</div>
+    <div id="formationBench"></div>
+  </div>
+</section>
 
 <!-- OBIETTIVI -->
 
