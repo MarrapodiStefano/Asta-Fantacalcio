@@ -507,6 +507,55 @@ label{
 }
 
 
+/* FILTRO DISPONIBILITÀ OBIETTIVI */
+
+.objective-tabs{
+
+  display:grid;
+
+  grid-template-columns:1fr 1fr;
+
+  gap:8px;
+
+  margin-top:8px;
+}
+
+.objective-tab{
+
+  min-height:38px;
+
+  border:1px solid var(--line);
+
+  border-radius:11px;
+
+  background:#fff;
+
+  color:var(--muted);
+
+  font-size:13px;
+
+  font-weight:850;
+}
+
+.objective-tab.active{
+
+  background:var(--greenbg);
+
+  border-color:#ccebdd;
+
+  color:var(--green);
+}
+
+.objective-tab.unavailable.active{
+
+  background:#fff0ee;
+
+  border-color:#f0d3cf;
+
+  color:var(--red);
+}
+
+
 /* VUOTO */
 
 .empty{
@@ -928,6 +977,29 @@ label{
 
   </div>
 
+
+  <div class="objective-tabs">
+
+    <button
+      class="objective-tab active"
+      data-obj-status="available"
+      onclick="setObjectiveStatus('available',this)">
+
+      Disponibili
+
+    </button>
+
+
+    <button
+      class="objective-tab unavailable"
+      data-obj-status="unavailable"
+      onclick="setObjectiveStatus('unavailable',this)">
+
+      Non disponibili
+
+    </button>
+
+  </div>
 
 
   <div
