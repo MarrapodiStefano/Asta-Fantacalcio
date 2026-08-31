@@ -810,6 +810,27 @@ function pct(v){
 
 
 /* =========================
+   MODALITÀ ASTA LIVE
+========================= */
+
+function liveTeamRows(player){
+    return [...current.teams].sort((a,b)=>spendableBudget(b)-spendableBudget(a)).map(t=>{
+        const max=spendableBudget(t);
+        const roleFull=t.players.filter(x=>x.role===player.role).length>=roleLimits()[player.role];
+        const blocked=max<1||roleFull;
+        return '<button class="live-team '+(blocked?'blocked':'')+'" '+(blocked?'disabled':'')+' onclick="selectLiveTeam('+t.id+',this)"><span><b>'+esc(t.name)+'</b><small>'+(roleFull?'Ruolo completo':'Offerta massima')+'</small></span><strong>'+(roleFull?'—':max)+'</strong></button>';
+    }).join('');
+}
+
+function selectLiveTeam(teamId,button){
+    document.querySelectorAll('.live-team').forEach(x=>x.classList.remove('selected'));
+    button.classList.add('selected');
+    $('buyer').value=teamId;
+    const max=spendableBudget(current.teams.find(t=>t.id===+teamId));
+    if(+$('price').value>max) $('price').value=max;
+}
+
+/* =========================
    SCHEDA CALCIATORE
 ========================= */
 
@@ -985,46 +1006,25 @@ function openPlayer(id){
             : `
 
 
-                <label>
-                    Squadra acquirente
-                </label>
+                <div class="live-title">🔥 Asta Live</div>
+                <div class="live-player-note">Seleziona la squadra vincitrice e inserisci il prezzo finale.</div>
 
+                <label>Squadre ancora in gioco</label>
+                <div class="live-teams">
+                    ${liveTeamRows(p)}
+                </div>
 
-                <select id="buyer">
+                <input id="buyer" type="hidden" value="">
 
-                    ${current.teams.map(t => `
-
-                        <option value="${t.id}">
-
-                            ${esc(t.name)}
-
-                        </option>
-
-                    `).join('')}
-
-                </select>
-
-
-
-                <label>
-                    Prezzo di acquisto
-                </label>
-
-
-                <input
-                    id="price"
-                    type="number"
-                    min="1"
-                    value="${p.credits || 1}">
-
-
+                <label>Prezzo finale di acquisto</label>
+                <input id="price" type="number" min="1" value="${p.credits || 1}" placeholder="Inserisci il prezzo finale">
 
                 <button
                     class="btn primary"
                     style="width:100%;margin-top:12px"
                     onclick="assignPlayer(${p.id})">
 
-                    ✓ Conferma acquisto
+                    🏆 Assegna giocatore
 
                 </button>
 
@@ -1060,9 +1060,15 @@ function assignPlayer(id){
         PLAYERS.find(x => x.id == id);
 
 
+    const buyerValue = $('buyer').value;
+
+    if(buyerValue === ''){
+        return alert('Seleziona prima la squadra che ha acquistato il giocatore.');
+    }
+
     let t =
         current.teams.find(
-            x => x.id === +$('buyer').value
+            x => x.id === +buyerValue
         );
 
 
