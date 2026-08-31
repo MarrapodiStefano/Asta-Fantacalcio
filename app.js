@@ -1185,11 +1185,6 @@ function openHistory(){
 
     if(!current) return;
 
-    const sold = Array.isArray(current.history)
-        ? [...current.history].sort((a,b) => b.timestamp - a.timestamp)
-        : [];
-
-
     openModal(`
 
         <div class="h2">
@@ -1197,68 +1192,22 @@ function openHistory(){
         </div>
 
         <div class="small muted">
-            Tutti gli acquisti effettuati durante l'asta.
+            Cerca un calciatore oppure annulla un acquisto.
         </div>
 
-        <div class="history-list">
+        <input
+            id="historySearch"
+            type="text"
+            placeholder="🔍 Cerca calciatore"
+            autocomplete="off"
+            oninput="renderHistoryList()">
 
-            ${
-                sold.length
-
-                ? sold.map(x => `
-
-                    <div class="history-row">
-
-                        <div>
-
-                            <div class="name">
-                                ${esc(x.name)}
-                            </div>
-
-                            <div class="meta">
-                                ${esc(x.teamName)}
-                                ·
-                                ${x.role}
-                                ${
-                                    x.realTeam
-                                    ? ' · ' + esc(x.realTeam)
-                                    : ''
-                                }
-                            </div>
-
-                        </div>
-
-                        <strong>
-                            ${x.price}
-                        </strong>
-
-                    </div>
-
-                `).join('')
-
-                : '<div class="empty">Nessun acquisto ancora registrato.</div>'
-
-            }
+        <div
+            id="historyResults"
+            class="history-list"
+            style="margin-top:10px">
 
         </div>
-
-        ${
-            sold.length
-
-            ? `
-                <button
-                    class="btn danger"
-                    style="width:100%;margin-top:14px"
-                    onclick="undoLastPurchase()">
-
-                    ↩️ Annulla ultimo acquisto
-
-                </button>
-              `
-
-            : ''
-
-        }
 
         <button
             class="btn secondary"
@@ -1270,6 +1219,79 @@ function openHistory(){
         </button>
 
     `);
+
+    renderHistoryList();
+
+}
+
+
+function renderHistoryList(){
+
+    const box = $('historyResults');
+
+    if(!box) return;
+
+
+    const query = ($('historySearch')?.value || '')
+        .trim()
+        .toLowerCase();
+
+
+    const sold = Array.isArray(current.history)
+        ? [...current.history]
+            .sort((a,b) => b.timestamp - a.timestamp)
+            .filter(x =>
+                !query ||
+                x.name.toLowerCase().includes(query)
+            )
+        : [];
+
+
+    box.innerHTML = sold.length
+
+        ? sold.map(x => `
+
+            <div
+                class="history-row"
+                style="cursor:pointer"
+                onclick="undoPurchase('${x.timestamp}')">
+
+                <div>
+
+                    <div class="name">
+                        ${esc(x.name)}
+                    </div>
+
+                    <div class="meta">
+                        ${esc(x.teamName)}
+                        ·
+                        ${x.role}
+                        ${
+                            x.realTeam
+                            ? ' · ' + esc(x.realTeam)
+                            : ''
+                        }
+                    </div>
+
+                </div>
+
+                <div style="text-align:right">
+
+                    <strong>
+                        ${x.price}
+                    </strong>
+
+                    <div class="small muted">
+                        Tocca per annullare
+                    </div>
+
+                </div>
+
+            </div>
+
+        `).join('')
+
+        : '<div class="empty">Nessun giocatore trovato nello storico.</div>';
 
 }
 
@@ -1283,14 +1305,36 @@ function undoLastPurchase(){
     }
 
 
-    const last = current.history
-        .reduce((a,b) => a.timestamp > b.timestamp ? a : b);
+    const last = [...current.history]
+        .sort((a,b) => b.timestamp - a.timestamp)[0];
+
+
+    undoPurchase(last.timestamp);
+
+}
+
+
+function undoPurchase(timestamp){
+
+    if(!Array.isArray(current.history)) return;
+
+
+    const purchase = current.history.find(
+        x => String(x.timestamp) === String(timestamp)
+    );
+
+
+    if(!purchase){
+
+        return alert('Acquisto non trovato.');
+
+    }
 
 
     if(!confirm(
-        'Vuoi annullare l’ultimo acquisto?\n\n' +
-        last.name + ' — ' + last.teamName +
-        ' — ' + last.price + ' crediti'
+        'Vuoi annullare questo acquisto?\n\n' +
+        purchase.name + ' — ' + purchase.teamName +
+        ' — ' + purchase.price + ' crediti'
     )){
 
         return;
@@ -1299,7 +1343,7 @@ function undoLastPurchase(){
 
 
     const team = current.teams.find(
-        t => t.id === last.teamId
+        t => t.id === purchase.teamId
     );
 
 
@@ -1311,7 +1355,7 @@ function undoLastPurchase(){
 
 
     const playerIndex = team.players.findIndex(
-        p => p.id == last.playerId
+        p => p.id == purchase.playerId
     );
 
 
@@ -1324,18 +1368,18 @@ function undoLastPurchase(){
 
     team.spent = Math.max(
         0,
-        team.spent - last.price
+        team.spent - purchase.price
     );
 
 
     current.history = current.history.filter(
-        x => x !== last
+        x => x !== purchase
     );
 
 
     persist();
 
-    closeModal();
+    renderHistoryList();
 
 }
 
