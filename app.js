@@ -402,6 +402,50 @@ function budget(t){
 }
 
 
+/*
+   CREDITI MINIMI DA TENERE DA PARTE
+
+   Ogni giocatore ancora necessario per completare
+   la rosa deve poter essere acquistato almeno a 1 credito.
+*/
+
+function totalSlots(){
+
+    const limits = roleLimits();
+
+    return limits.P + limits.D + limits.C + limits.A;
+
+}
+
+
+function remainingPlayers(t){
+
+    return Math.max(
+        0,
+        totalSlots() - t.players.length
+    );
+
+}
+
+
+/*
+   CREDITI REALMENTE SPENDIBILI
+
+   Se mancano ancora N giocatori, bisogna conservare
+   almeno N - 1 crediti per poter completare la rosa
+   dopo il prossimo acquisto.
+*/
+
+function spendableBudget(t){
+
+    return Math.max(
+        0,
+        budget(t) - Math.max(0, remainingPlayers(t) - 1)
+    );
+
+}
+
+
 
 /* =========================
    RIGA SQUADRA
@@ -431,7 +475,7 @@ function teamRow(t){
 
             <div class="budget">
 
-                ${budget(t)}
+                ${spendableBudget(t)}
 
             </div>
 
@@ -501,7 +545,7 @@ function render(){
         ? [...current.teams]
             .sort((a,b) => {
 
-                const diff = budget(b) - budget(a);
+                const diff = spendableBudget(b) - spendableBudget(a);
 
                 return diff || a.id - b.id;
 
@@ -549,7 +593,7 @@ function render(){
 
                     <div class="budget">
 
-                        ${budget(t)}
+                        ${spendableBudget(t)}
 
                     </div>
 
@@ -1035,10 +1079,10 @@ function assignPlayer(id){
 
 
 
-    if(price > budget(t)){
+    if(price > spendableBudget(t)){
 
         return alert(
-            'Credito insufficiente.'
+            `Puoi spendere al massimo ${spendableBudget(t)} crediti, così resterà almeno 1 credito per ogni giocatore ancora necessario a completare la rosa.`
         );
 
     }
@@ -1296,7 +1340,7 @@ function savePurchaseEdit(id,oldId){
     */
 
     let available =
-        budget(neu);
+        spendableBudget(neu);
 
 
     if(neu.id === old.id){
@@ -1309,7 +1353,7 @@ function savePurchaseEdit(id,oldId){
     if(price > available){
 
         return alert(
-            'Credito insufficiente.'
+            `Puoi spendere al massimo ${available} crediti, così la squadra potrà comunque completare la rosa.`
         );
 
     }
