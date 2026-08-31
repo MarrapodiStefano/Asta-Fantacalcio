@@ -1,0 +1,41 @@
+name: Aggiorna Listone automaticamente
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Listone.xlsx'
+
+permissions:
+  contents: write
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Scarica repository
+        uses: actions/checkout@v4
+
+      - name: Installa Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Installa dipendenze
+        run: pip install openpyxl
+
+      - name: Genera players.js dal nuovo Listone
+        run: python scripts/convert_listone.py
+
+      - name: Salva automaticamente il nuovo listone
+        run: |
+          if git diff --quiet -- players.js; then
+            echo "Nessuna modifica a players.js"
+            exit 0
+          fi
+          git config user.name "Asta Fantacalcio Bot"
+          git config user.email "actions@github.com"
+          git add players.js
+          git commit -m "Aggiorna automaticamente il Listone"
+          git push
