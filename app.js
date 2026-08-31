@@ -498,6 +498,26 @@ function teamRow(t){
 
 
 
+/* FORMAZIONI - FASE 1 */
+const FORMATION_MODULES={'3-4-3':[3,4,3],'3-5-2':[3,5,2],'4-3-3':[4,3,3],'4-4-2':[4,4,2],'4-5-1':[4,5,1],'5-3-2':[5,3,2],'5-4-1':[5,4,1]};
+let formationTeamId=null;
+function openFormation(teamId){formationTeamId=teamId;go('formation')}
+function formationAutoLine(players,role,needed){return players.filter(p=>p.role===role).sort((a,b)=>b.price-a.price).slice(0,needed)}
+function renderFormation(){
+ const title=$('formationTitle'),select=$('formationModule'),pitch=$('pitch'),bench=$('formationBench');
+ if(!current||formationTeamId===null){title.textContent='⚽ Formazione';pitch.innerHTML='';bench.innerHTML='';return}
+ const team=current.teams.find(t=>t.id===formationTeamId);if(!team){pitch.innerHTML='';return}
+ title.textContent='⚽ '+team.name;const saved=team.formationModule||'3-4-3';
+ select.innerHTML=Object.keys(FORMATION_MODULES).map(m=>'<option value="'+m+'"'+(m===saved?' selected':'')+'>'+m+'</option>').join('');
+ const mod=FORMATION_MODULES[saved];
+ const starters=[formationAutoLine(team.players,'P',1),formationAutoLine(team.players,'D',mod[0]),formationAutoLine(team.players,'C',mod[1]),formationAutoLine(team.players,'A',mod[2])];
+ const used=new Set(starters.flat().map(p=>p.id)),positions=['82%','61%','39%','16%'];
+ pitch.className='pitch';pitch.innerHTML=starters.map((line,i)=>'<div class="formation-line" style="top:'+positions[i]+'">'+line.map(p=>'<div class="formation-player"><div class="formation-shirt">'+p.role+'</div><div>'+esc(p.name)+'</div><small>'+p.price+'</small></div>').join('')+'</div>').join('');
+ const remaining=team.players.filter(p=>!used.has(p.id)).sort((a,b)=>b.price-a.price);
+ bench.innerHTML=remaining.length?'<div class="bench-list">'+remaining.map(p=>'<div class="bench-player">'+esc(p.name)+'<small>'+p.role+' · '+p.price+'</small></div>').join('')+'</div>':'<div class="empty">Nessun giocatore in panchina.</div>';
+}
+function setFormationModule(module){if(!current||formationTeamId===null)return;const team=current.teams.find(t=>t.id===formationTeamId);if(!team)return;team.formationModule=module;persist()}
+
 /* =========================
    RENDER GENERALE
 ========================= */
@@ -602,10 +622,9 @@ function render(){
                     </div>
 
 
-                    <div class="budget">
-
-                        ${spendableBudget(t)}
-
+                    <div class="teamrow-actions">
+                        <div class="budget">${spendableBudget(t)}</div>
+                        <button class="ball-btn" onclick="openFormation(${t.id})" aria-label="Apri formazione">⚽</button>
                     </div>
 
                 </div>
@@ -663,6 +682,8 @@ function render(){
         `;
 
 
+
+    renderFormation();
 
     renderObjectives();
 
