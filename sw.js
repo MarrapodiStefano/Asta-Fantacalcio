@@ -1,1 +1,109 @@
-const CACHE="asta-fantacalcio-v1";const ASSETS=["./","./index.html","./app.js","./players.js","./manifest.json"];self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS))));self.addEventListener("activate",e=>e.waitUntil(self.clients.claim()));self.addEventListener("fetch",e=>e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(x=>{let y=x.clone();caches.open(CACHE).then(c=>c.put(e.request,y));return x}).catch(()=>caches.match("./index.html")))));
+const CACHE = "asta-fantacalcio-v2";
+
+const ASSETS = [
+    "./",
+    "./index.html",
+    "./app.js",
+    "./players.js",
+    "./listone-version.json",
+    "./manifest.json",
+    "./icon.svg"
+];
+
+
+/* INSTALLAZIONE */
+
+self.addEventListener("install", event => {
+
+    event.waitUntil(
+
+        caches
+            .open(CACHE)
+            .then(cache => cache.addAll(ASSETS))
+            .then(() => self.skipWaiting())
+
+    );
+
+});
+
+
+/* ATTIVAZIONE */
+
+self.addEventListener("activate", event => {
+
+    event.waitUntil(
+
+        caches
+            .keys()
+            .then(keys =>
+
+                Promise.all(
+                    keys
+                    .filter(key => key.startsWith("asta-fantacalcio-") && key !== CACHE)
+                    .map(key => caches.delete(key))
+                )
+
+            )
+            .then(() => self.clients.claim())
+
+    );
+
+});
+
+
+/* STRATEGIA DI CACHE
+   Network-first per ricevere sempre l'ultima versione
+   quando c'è connessione, con fallback offline alla cache.
+*/
+
+self.addEventListener("fetch", event => {
+
+    if(event.request.method !== "GET") return;
+
+    const request = event.request;
+
+
+    event.respondWith(
+
+        fetch(request)
+
+        .then(response => {
+
+            if(
+                response &&
+                response.status === 200 &&
+                request.url.startsWith(self.location.origin)
+            ){
+
+                const copy = response.clone();
+
+                caches
+                    .open(CACHE)
+                    .then(cache => cache.put(request, copy));
+
+            }
+
+            return response;
+
+        })
+
+        .catch(() =>
+
+            caches
+                .match(request)
+                .then(cached =>
+
+                    cached ||
+                    (
+                        request.mode === "navigate"
+                            ? caches.match("./index.html")
+                            : undefined
+                    )
+
+                )
+
+        )
+
+    );
+
+});
