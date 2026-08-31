@@ -738,16 +738,25 @@ label{
 }
 
 .note-actions{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:10px;
+  width:100%;
+  display:grid;
+  place-items:center;
   margin-top:7px;
+  position:relative;
 }
 
 .note-actions .btn{
   min-height:38px;
   padding:7px 12px;
+}
+
+.note-actions #noteStatus{
+  position:absolute;
+  left:50%;
+  transform:translateX(-50%);
+  top:100%;
+  margin-top:4px;
+  white-space:nowrap;
 }
 
 /* =========================
