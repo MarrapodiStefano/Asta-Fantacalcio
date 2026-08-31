@@ -498,7 +498,14 @@ function render(){
 
     $('miniTeams').innerHTML = current
 
-        ? current.teams
+        ? [...current.teams]
+            .sort((a,b) => {
+
+                const diff = budget(b) - budget(a);
+
+                return diff || a.id - b.id;
+
+            })
             .map(teamRow)
             .join('')
 
