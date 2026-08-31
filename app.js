@@ -181,6 +181,18 @@ function newAuction(){
 
 
         <label>
+            Giocatori da acquistare per ruolo
+        </label>
+
+        <div class="rolelimits">
+            <div><span>Portieri</span><input id="alimP" type="number" min="0" value="2"></div>
+            <div><span>Difensori</span><input id="alimD" type="number" min="0" value="9"></div>
+            <div><span>Centrocampisti</span><input id="alimC" type="number" min="0" value="9"></div>
+            <div><span>Attaccanti</span><input id="alimA" type="number" min="0" value="7"></div>
+        </div>
+
+
+        <label>
             Nomi squadre
         </label>
 
@@ -268,6 +280,13 @@ function createAuction(){
 
         initialCredits:c,
 
+        roleLimits:{
+            P:Math.max(0, +$('alimP').value || 0),
+            D:Math.max(0, +$('alimD').value || 0),
+            C:Math.max(0, +$('alimC').value || 0),
+            A:Math.max(0, +$('alimA').value || 0)
+        },
+
 
         teams:names.map((name,id)=>({
 
@@ -306,6 +325,22 @@ function createAuction(){
 
 
 /* =========================
+   LIMITI ROSA
+========================= */
+
+function roleLimits(){
+
+    return current?.roleLimits || {
+        P:2,
+        D:9,
+        C:9,
+        A:7
+    };
+
+}
+
+
+/* =========================
    CONTEGGIO RUOLI
 ========================= */
 
@@ -331,19 +366,19 @@ function counts(t){
     return `
 
         <span class="countpill">
-            <b>P</b>${c.P}
+            <b>P</b>${c.P}/${roleLimits().P}
         </span>
 
         <span class="countpill">
-            <b>D</b>${c.D}
+            <b>D</b>${c.D}/${roleLimits().D}
         </span>
 
         <span class="countpill">
-            <b>C</b>${c.C}
+            <b>C</b>${c.C}/${roleLimits().C}
         </span>
 
         <span class="countpill">
-            <b>A</b>${c.A}
+            <b>A</b>${c.A}/${roleLimits().A}
         </span>
 
         <span class="totalcount">
@@ -1001,6 +1036,19 @@ function assignPlayer(id){
 
     }
 
+
+
+    const limits = roleLimits();
+
+    if(
+        t.players.filter(x => x.role === p.role).length >= limits[p.role]
+    ){
+
+        return alert(
+            'Hai già raggiunto il numero massimo previsto per questo ruolo.'
+        );
+
+    }
 
 
     if(
