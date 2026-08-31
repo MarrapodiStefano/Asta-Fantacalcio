@@ -1955,7 +1955,14 @@ function toggleObjective(id){
     );
 
 
+    /* Aggiorna subito la lista degli obiettivi visibile,
+       senza chiudere la finestra di selezione. */
+
     renderSetup();
+
+    if(typeof renderObjectives === 'function'){
+        renderObjectives();
+    }
 
 }
 
