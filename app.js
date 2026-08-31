@@ -305,6 +305,8 @@ function createAuction(){
 
         objectives:[],
 
+        objectivePriorities:{},
+
         history:[]
 
     };
@@ -1960,6 +1962,30 @@ function toggleObjective(id){
 
 
 /* =========================
+   PRIORITÀ OBIETTIVI
+========================= */
+
+const PRIORITIES = {
+    max:  { icon:'🔥', label:'Priorità massima', order:3 },
+    high: { icon:'⭐', label:'Priorità alta', order:2 },
+    low:  { icon:'👍', label:'Interessante', order:1 }
+};
+
+function objectivePriority(id){
+    if(!current.objectivePriorities) current.objectivePriorities = {};
+    return current.objectivePriorities[id] || 'low';
+}
+
+function cycleObjectivePriority(id,event){
+    if(event) event.stopPropagation();
+    if(!current.objectivePriorities) current.objectivePriorities = {};
+    const next={low:'high',high:'max',max:'low'};
+    current.objectivePriorities[id]=next[objectivePriority(id)];
+    persist();
+    renderObjectives();
+}
+
+/* =========================
    LISTA OBIETTIVI
 ========================= */
 
@@ -1994,11 +2020,12 @@ function renderObjectives(){
                     : sold.has(p.id)
             )
         )
-        .sort(
-            (a,b) =>
-                (b.appeal ?? -1) -
-                (a.appeal ?? -1)
-        );
+        .sort((a,b) => {
+            const pa = PRIORITIES[objectivePriority(a.id)].order;
+            const pb = PRIORITIES[objectivePriority(b.id)].order;
+            if(pb !== pa) return pb - pa;
+            return (b.appeal ?? -1) - (a.appeal ?? -1);
+        });
 
 
 
@@ -2050,9 +2077,20 @@ function renderObjectives(){
                     </div>
 
 
-                    <b>
-                        ${p.appeal ?? '—'}
-                    </b>
+                    <div
+                        class="objective-priority"
+                        onclick="cycleObjectivePriority(${p.id}, event)"
+                        title="Tocca per cambiare priorità">
+
+                        <span>
+                            ${PRIORITIES[objectivePriority(p.id)].icon}
+                        </span>
+
+                        <small>
+                            ${PRIORITIES[objectivePriority(p.id)].label}
+                        </small>
+
+                    </div>
 
 
                 </div>
