@@ -290,6 +290,9 @@ function createAuction(){
         },
 
 
+        myTeamId:0,
+
+
         teams:names.map((name,id)=>({
 
             id,
@@ -866,6 +869,21 @@ function savePlayerNote(id){
    CONSIGLIO OFFERTA
 ========================= */
 
+function myTeam(){
+
+    if(!current) return null;
+
+    const id = Number.isFinite(+current.myTeamId)
+        ? +current.myTeamId
+        : 0;
+
+    return current.teams.find(t => t.id === id)
+        || current.teams[0]
+        || null;
+
+}
+
+
 function recommendedOffer(player){
 
     const credits = Number(player.credits);
@@ -900,7 +918,13 @@ function recommendedOffer(player){
     }
 
 
-    return Math.max(1, Math.round(base * multiplier));
+    const advice = Math.max(1, Math.round(base * multiplier));
+
+    const team = myTeam();
+
+    if(!team) return advice;
+
+    return Math.min(advice, spendableBudget(team));
 
 }
 
@@ -1039,6 +1063,16 @@ function openPlayer(id, source){
 
             <div class="offer-advice-row">
 
+                <span>💰 Puoi spendere fino a</span>
+
+                <strong>
+                    ${myTeam() ? spendableBudget(myTeam()) : '—'}
+                </strong>
+
+            </div>
+
+            <div class="offer-advice-row offer-recommended">
+
                 <span>💡 Offerta consigliata</span>
 
                 <strong>
@@ -1048,7 +1082,7 @@ function openPlayer(id, source){
             </div>
 
             <small>
-                Basata su CREDITI, PMV e sulla priorità assegnata al giocatore.
+                La proposta combina CREDITI (70%), PMV (30%) e la priorità del giocatore, senza mai superare il budget realmente spendibile.
             </small>
 
         </div>
