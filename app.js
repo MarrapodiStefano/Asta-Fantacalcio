@@ -1159,6 +1159,101 @@ function assignPlayer(id){
 
 
 /* =========================
+   STORICO ASTA
+========================= */
+
+function openHistory(){
+
+    if(!current) return;
+
+    const sold = [];
+
+    current.teams.forEach(team => {
+
+        team.players.forEach(player => {
+
+            const info = PLAYERS.find(p => p.id == player.id);
+
+            sold.push({
+                ...player,
+                teamName: team.name,
+                teamId: team.id,
+                full: info
+            });
+
+        });
+
+    });
+
+    sold.sort((a,b) => b.id - a.id);
+
+    openModal(`
+
+        <div class="h2">
+            📜 Storico asta
+        </div>
+
+        <div class="small muted">
+            Tutti i giocatori acquistati finora.
+        </div>
+
+        <div class="history-list">
+
+            ${
+                sold.length
+
+                ? sold.map(x => `
+
+                    <div class="history-row">
+
+                        <div>
+
+                            <div class="name">
+                                ${esc(x.name)}
+                            </div>
+
+                            <div class="meta">
+                                ${esc(x.teamName)}
+                                ·
+                                ${x.role}
+                                ${
+                                    x.full?.team
+                                    ? ' · ' + esc(x.full.team)
+                                    : ''
+                                }
+                            </div>
+
+                        </div>
+
+                        <strong>
+                            ${x.price}
+                        </strong>
+
+                    </div>
+
+                `).join('')
+
+                : '<div class="empty">Nessun acquisto ancora registrato.</div>'
+
+            }
+
+        </div>
+
+        <button
+            class="btn secondary"
+            style="width:100%;margin-top:14px"
+            onclick="closeModal()">
+
+            Chiudi
+
+        </button>
+
+    `);
+
+}
+
+
+/* =========================
    PULIZIA RICERCA
 ========================= */
 
