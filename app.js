@@ -307,6 +307,8 @@ function createAuction(){
 
         objectivePriorities:{},
 
+        playerNotes:{},
+
         history:[]
 
     };
@@ -835,6 +837,32 @@ function selectLiveTeam(teamId,button){
 }
 
 /* =========================
+   NOTE CALCIATORI
+========================= */
+
+function playerNote(id){
+    if(!current.playerNotes) current.playerNotes = {};
+    return current.playerNotes[id] || '';
+}
+
+function savePlayerNote(id){
+    if(!current.playerNotes) current.playerNotes = {};
+    const field = $('playerNote');
+    if(!field) return;
+    const note = field.value.trim();
+    if(note) current.playerNotes[id] = note;
+    else delete current.playerNotes[id];
+    persist();
+    const status = $('noteStatus');
+    if(status){
+        status.textContent = '✓ Nota salvata';
+        setTimeout(function(){
+            if($('noteStatus')) $('noteStatus').textContent = '';
+        },1800);
+    }
+}
+
+/* =========================
    SCHEDA CALCIATORE
 ========================= */
 
@@ -963,9 +991,39 @@ function openPlayer(id){
 
         </div>
 
+        <div class="player-notes">
+
+            <label>
+                📝 Note personali
+            </label>
+
+            <textarea
+                id="playerNote"
+                rows="3"
+                placeholder="Scrivi una nota su questo giocatore...">${esc(playerNote(p.id))}</textarea>
+
+            <div class="note-actions">
+
+                <button
+                    class="btn secondary"
+                    onclick="savePlayerNote(${p.id})">
+
+                    💾 Salva nota
+
+                </button>
+
+                <span
+                    id="noteStatus"
+                    class="small muted">
+
+                </span>
+
+            </div>
+
+        </div>
 
 
-        ${
+        ${ 
             rec
 
             ? `
