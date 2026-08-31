@@ -8,6 +8,8 @@ let current = JSON.parse(
 
 let objRole = 'P';
 
+let objStatus = 'available';
+
 
 const $ = id => document.getElementById(id);
 
@@ -1455,6 +1457,31 @@ function setRole(r,el){
 
 
 /* =========================
+   OBIETTIVI - DISPONIBILITÀ
+========================= */
+
+function setObjectiveStatus(status,el){
+
+    objStatus = status;
+
+
+    document
+        .querySelectorAll('.objective-tab')
+        .forEach(x =>
+            x.classList.remove('active')
+        );
+
+
+    el.classList.add('active');
+
+
+    renderObjectives();
+
+}
+
+
+
+/* =========================
    MODIFICA OBIETTIVI
 ========================= */
 
@@ -1717,7 +1744,12 @@ function renderObjectives(){
         PLAYERS
         .filter(p =>
             p.role === objRole &&
-            current.objectives.includes(p.id)
+            current.objectives.includes(p.id) &&
+            (
+                objStatus === 'available'
+                    ? !sold.has(p.id)
+                    : sold.has(p.id)
+            )
         )
         .sort(
             (a,b) =>
@@ -1791,7 +1823,9 @@ function renderObjectives(){
 
             <div class="empty">
 
-                Nessun obiettivo impostato.
+                ${objStatus === 'available'
+                    ? 'Nessun obiettivo disponibile.'
+                    : 'Nessun obiettivo non disponibile.'}
 
             </div>
 
