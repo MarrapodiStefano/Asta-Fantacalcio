@@ -866,6 +866,49 @@ function savePlayerNote(id){
 }
 
 /* =========================
+   CONTEGGIO OBIETTIVI EQUIVALENTI
+========================= */
+
+function availableObjectiveCount(role, priority){
+    if(!current) return 0;
+
+    const sold = new Set();
+
+    current.teams.forEach(t => {
+        t.players.forEach(p => sold.add(p.id));
+    });
+
+    return PLAYERS.filter(p =>
+        p.role === role &&
+        current.objectives.includes(p.id) &&
+        !sold.has(p.id) &&
+        objectivePriority(p.id) === priority
+    ).length;
+}
+
+function objectiveRemainingHtml(player){
+
+    if(!current.objectives.includes(player.id)) return '';
+
+    const priority = objectivePriority(player.id);
+    const count = availableObjectiveCount(player.role, priority);
+    const data = PRIORITIES[priority];
+
+    const message = count === 1
+        ? 'È l’ultimo obiettivo ancora disponibile in questa categoria.'
+        : count + ' obiettivi ancora disponibili in questa categoria.';
+
+    return '<div class="objective-remaining">' +
+        '<div class="objective-remaining-main">' +
+            '<span>' + data.icon + ' ' + data.label + ' · ' + player.role + '</span>' +
+            '<strong>' + count + '</strong>' +
+        '</div>' +
+        '<small>' + message + '</small>' +
+    '</div>';
+}
+
+
+/* =========================
    CONSIGLIO OFFERTA
 ========================= */
 
@@ -1057,6 +1100,9 @@ function openPlayer(id, source){
 
 
         </div>
+
+
+        ${objectiveRemainingHtml(p)}
 
 
         <div class="offer-advice">
