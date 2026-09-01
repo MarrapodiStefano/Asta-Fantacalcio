@@ -504,36 +504,7 @@ let formationTeamId=null;
 function openFormation(teamId){formationTeamId=teamId;go('formation')}
 function formationAutoLine(players,role,needed){return players.filter(p=>p.role===role).sort((a,b)=>b.price-a.price).slice(0,needed)}
 function pitchArtwork(){
-  return '<svg class="pitch-art" viewBox="0 0 450 680" preserveAspectRatio="none" aria-hidden="true">' +
-    '<defs>' +
-      '<linearGradient id="grass" x1="0" y1="0" x2="0" y2="1">' +
-        '<stop offset="0%" stop-color="#176c35"/><stop offset="50%" stop-color="#0d5d2b"/><stop offset="100%" stop-color="#176c35"/>' +
-      '</linearGradient>' +
-      '<pattern id="stripes" width="90" height="680" patternUnits="userSpaceOnUse">' +
-        '<rect width="45" height="680" fill="rgba(255,255,255,.035)"/>' +
-      '</pattern>' +
-    '</defs>' +
-    '<rect width="450" height="680" fill="url(#grass)"/>' +
-    '<rect width="450" height="680" fill="url(#stripes)"/>' +
-    '<g fill="none" stroke="rgba(255,255,255,.9)" stroke-width="3">' +
-      '<rect x="30" y="22" width="390" height="636"/>' +
-      '<line x1="30" y1="340" x2="420" y2="340"/>' +
-      '<circle cx="225" cy="340" r="52"/>' +
-      '<circle cx="225" cy="340" r="3" fill="rgba(255,255,255,.9)"/>' +
-      '<rect x="82" y="22" width="286" height="118"/>' +
-      '<rect x="82" y="540" width="286" height="118"/>' +
-      '<rect x="153" y="0" width="144" height="22"/>' +
-      '<rect x="153" y="658" width="144" height="22"/>' +
-      '<path d="M194 140 A31 31 0 0 0 256 140"/>' +
-      '<path d="M194 540 A31 31 0 0 1 256 540"/>' +
-      '<path d="M30 52 A22 22 0 0 0 52 30"/>' +
-      '<path d="M398 30 A22 22 0 0 0 420 52"/>' +
-      '<path d="M30 628 A22 22 0 0 1 52 650"/>' +
-      '<path d="M398 650 A22 22 0 0 1 420 628"/>' +
-    '</g>' +
-    '<circle cx="225" cy="110" r="3.5" fill="rgba(255,255,255,.9)"/>' +
-    '<circle cx="225" cy="570" r="3.5" fill="rgba(255,255,255,.9)"/>' +
-  '</svg>';
+  return '<img class="pitch-art" src="./assets/campetto.JPG" alt="">';
 }
 
 function renderFormation(){
