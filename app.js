@@ -336,6 +336,124 @@ function createAuction(){
 
 
 /* =========================
+   MODIFICA IMPOSTAZIONI ASTA
+========================= */
+
+function editAuctionSettings(){
+
+    if(!current) return;
+
+    const limits=roleLimits();
+
+    openModal(`
+
+        <div class="h2">⚙️ Modifica asta</div>
+
+        <div class="muted small" style="margin-bottom:14px">
+            Puoi aggiornare le impostazioni anche ad asta in corso.
+        </div>
+
+        <label>Nome asta</label>
+        <input id="editAname" value="${esc(current.name)}">
+
+        <label>Data</label>
+        <input id="editAdate" type="date" value="${esc(current.date||'')}">
+
+        <label>Crediti iniziali per squadra</label>
+        <input id="editAcred" type="number" min="1" value="${current.initialCredits}">
+
+        <label>Giocatori da acquistare per ruolo</label>
+        <div class="rolelimits">
+            <div><span>Portieri</span><input id="editLimP" type="number" min="0" value="${limits.P}"></div>
+            <div><span>Difensori</span><input id="editLimD" type="number" min="0" value="${limits.D}"></div>
+            <div><span>Centrocampisti</span><input id="editLimC" type="number" min="0" value="${limits.C}"></div>
+            <div><span>Attaccanti</span><input id="editLimA" type="number" min="0" value="${limits.A}"></div>
+        </div>
+
+        <label>Nomi squadre</label>
+
+        <div id="editTeamInputs">
+            ${current.teams.map(t=>`
+                <input
+                    class="edit-tn"
+                    data-team-id="${t.id}"
+                    style="margin:4px 0"
+                    value="${esc(t.name)}"
+                    placeholder="Nome squadra">
+            `).join('')}
+        </div>
+
+        <button class="btn primary" style="width:100%;margin-top:14px" onclick="saveAuctionSettings()">
+            💾 Salva modifiche
+        </button>
+
+        <button class="btn secondary" style="width:100%;margin-top:8px" onclick="closeModal()">
+            Annulla
+        </button>
+
+    `);
+
+}
+
+function saveAuctionSettings(){
+
+    if(!current) return;
+
+    const newLimits={
+        P:Math.max(0,+$('editLimP').value||0),
+        D:Math.max(0,+$('editLimD').value||0),
+        C:Math.max(0,+$('editLimC').value||0),
+        A:Math.max(0,+$('editLimA').value||0)
+    };
+
+    const problems=[];
+
+    current.teams.forEach(t=>{
+        const c={P:0,D:0,C:0,A:0};
+        t.players.forEach(p=>c[p.role]++);
+        ['P','D','C','A'].forEach(role=>{
+            if(c[role]>newLimits[role]){
+                problems.push(t.name+' ha già '+c[role]+' '+role);
+            }
+        });
+    });
+
+    if(problems.length){
+        alert(
+            'Impossibile salvare una composizione rosa inferiore ai giocatori già acquistati.\n\n'+
+            problems.join('\n')
+        );
+        return;
+    }
+
+    current.name=$('editAname').value.trim()||'Asta Fantacalcio';
+    current.date=$('editAdate').value;
+    current.initialCredits=Math.max(1,+$('editAcred').value||1);
+    current.roleLimits=newLimits;
+
+    document.querySelectorAll('.edit-tn').forEach(input=>{
+        const id=+input.dataset.teamId;
+        const team=current.teams.find(t=>t.id===id);
+        if(team){
+            team.name=input.value.trim()||('Squadra '+(id+1));
+        }
+    });
+
+    /* Aggiorna anche lo storico con i nuovi nomi delle squadre */
+    const namesById=new Map(current.teams.map(t=>[t.id,t.name]));
+    current.history.forEach(h=>{
+        if(h.teamId!=null && namesById.has(h.teamId)){
+            h.team=namesById.get(h.teamId);
+        }
+    });
+
+    persist();
+    closeModal();
+
+}
+
+
+/* =========================
    LIMITI ROSA
 ========================= */
 
