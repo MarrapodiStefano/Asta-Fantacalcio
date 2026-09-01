@@ -498,29 +498,186 @@ function teamRow(t){
 
 
 
-/* FORMAZIONI - FASE 1 */
+/* FORMAZIONI */
 const FORMATION_MODULES={'3-4-3':[3,4,3],'3-5-2':[3,5,2],'4-3-3':[4,3,3],'4-4-2':[4,4,2],'4-5-1':[4,5,1],'5-3-2':[5,3,2],'5-4-1':[5,4,1]};
 let formationTeamId=null;
-function openFormation(teamId){formationTeamId=teamId;go('formation')}
-function formationAutoLine(players,role,needed){return players.filter(p=>p.role===role).sort((a,b)=>b.price-a.price).slice(0,needed)}
+let selectedBenchPlayerId=null;
+
+function openFormation(teamId){
+  formationTeamId=teamId;
+  selectedBenchPlayerId=null;
+  go('formation');
+}
+
+function formationAutoLine(players,role,needed){
+  return players
+    .filter(p=>p.role===role)
+    .sort((a,b)=>b.price-a.price)
+    .slice(0,needed);
+}
+
 function pitchArtwork(){
   return '<img class="pitch-art" src="./assets/campetto.JPG" alt="">';
 }
 
-function renderFormation(){
- const title=$('formationTitle'),select=$('formationModule'),pitch=$('pitch'),bench=$('formationBench');
- if(!current||formationTeamId===null){title.textContent='⚽ Formazione';pitch.innerHTML='';bench.innerHTML='';return}
- const team=current.teams.find(t=>t.id===formationTeamId);if(!team){pitch.innerHTML='';return}
- title.textContent='⚽ '+team.name;const saved=team.formationModule||'3-4-3';
- select.innerHTML=Object.keys(FORMATION_MODULES).map(m=>'<option value="'+m+'"'+(m===saved?' selected':'')+'>'+m+'</option>').join('');
- const mod=FORMATION_MODULES[saved];
- const starters=[formationAutoLine(team.players,'P',1),formationAutoLine(team.players,'D',mod[0]),formationAutoLine(team.players,'C',mod[1]),formationAutoLine(team.players,'A',mod[2])];
- const used=new Set(starters.flat().map(p=>p.id)),positions=['82%','61%','39%','16%'];
- pitch.className='pitch';pitch.innerHTML=pitchArtwork()+starters.map((line,i)=>'<div class="formation-line" style="top:'+positions[i]+'">'+line.map(p=>'<div class="formation-player"><div class="formation-shirt">'+p.role+'</div><div class="formation-player-name">'+esc(p.name)+'</div><div class="formation-player-price">'+p.price+'</div></div>').join('')+'</div>').join('');
- const remaining=team.players.filter(p=>!used.has(p.id)).sort((a,b)=>b.price-a.price);
- bench.innerHTML=remaining.length?'<div class="bench-list">'+remaining.map(p=>'<div class="bench-player">'+esc(p.name)+'<small>'+p.role+' · '+p.price+'</small></div>').join('')+'</div>':'<div class="empty">Nessun giocatore in panchina.</div>';
+function formationNeeds(module){
+  const m=FORMATION_MODULES[module]||FORMATION_MODULES['3-4-3'];
+  return {P:1,D:m[0],C:m[1],A:m[2]};
 }
-function setFormationModule(module){if(!current||formationTeamId===null)return;const team=current.teams.find(t=>t.id===formationTeamId);if(!team)return;team.formationModule=module;persist()}
+
+function getFormationStarters(team,module){
+  const needs=formationNeeds(module);
+  const byId=new Map(team.players.map(p=>[p.id,p]));
+  const saved=Array.isArray(team.formationStarters)?team.formationStarters:[];
+  const savedPlayers=saved.map(id=>byId.get(id)).filter(Boolean);
+  const counts={P:0,D:0,C:0,A:0};
+  savedPlayers.forEach(p=>counts[p.role]++);
+
+  const valid=
+    savedPlayers.length===11 &&
+    savedPlayers.every(p=>counts[p.role]<=needs[p.role]) &&
+    counts.P===needs.P && counts.D===needs.D &&
+    counts.C===needs.C && counts.A===needs.A;
+
+  if(valid) return savedPlayers;
+
+  const starters=[
+    ...formationAutoLine(team.players,'P',needs.P),
+    ...formationAutoLine(team.players,'D',needs.D),
+    ...formationAutoLine(team.players,'C',needs.C),
+    ...formationAutoLine(team.players,'A',needs.A)
+  ];
+
+  team.formationStarters=starters.map(p=>p.id);
+  return starters;
+}
+
+function saveFormationState(){
+  localStorage.setItem('AF_CURRENT',JSON.stringify(current));
+  const index=db.findIndex(a=>a.id===current?.id);
+  if(index>=0){
+    db[index]=current;
+    localStorage.setItem('AF_DB',JSON.stringify(db));
+  }
+}
+
+function renderFormation(){
+  const title=$('formationTitle'),select=$('formationModule'),pitch=$('pitch'),bench=$('formationBench');
+
+  if(!current||formationTeamId===null){
+    title.textContent='⚽ Formazione';
+    pitch.innerHTML='';
+    bench.innerHTML='';
+    return;
+  }
+
+  const team=current.teams.find(t=>t.id===formationTeamId);
+  if(!team){
+    pitch.innerHTML='';
+    return;
+  }
+
+  title.textContent='⚽ '+team.name;
+
+  const saved=team.formationModule||'3-4-3';
+  select.innerHTML=Object.keys(FORMATION_MODULES)
+    .map(m=>'<option value="'+m+'"'+(m===saved?' selected':'')+'>'+m+'</option>')
+    .join('');
+
+  const allStarters=getFormationStarters(team,saved);
+  const starters=[
+    allStarters.filter(p=>p.role==='P'),
+    allStarters.filter(p=>p.role==='D'),
+    allStarters.filter(p=>p.role==='C'),
+    allStarters.filter(p=>p.role==='A')
+  ];
+
+  const used=new Set(allStarters.map(p=>p.id));
+  const positions=['82%','61%','39%','16%'];
+
+  pitch.className='pitch';
+  pitch.innerHTML=
+    pitchArtwork()+
+    starters.map((line,i)=>
+      '<div class="formation-line" style="top:'+positions[i]+'">'+
+      line.map(p=>
+        '<button class="formation-player '+(selectedBenchPlayerId!==null?'swap-target':'')+
+        '" onclick="selectFieldPlayer('+p.id+')" aria-label="Giocatore '+esc(p.name)+'">'+
+          '<div class="formation-shirt">'+p.role+'</div>'+
+          '<div class="formation-player-name">'+esc(p.name)+'</div>'+
+          '<div class="formation-player-price">'+p.price+'</div>'+
+        '</button>'
+      ).join('')+
+      '</div>'
+    ).join('');
+
+  const remaining=team.players
+    .filter(p=>!used.has(p.id))
+    .sort((a,b)=>b.price-a.price);
+
+  bench.innerHTML=remaining.length
+    ? '<div class="bench-hint">'+
+        (selectedBenchPlayerId===null
+          ? 'Tocca un giocatore in panchina, poi un giocatore in campo dello stesso ruolo.'
+          : 'Giocatore selezionato: <b>'+esc(remaining.find(p=>p.id===selectedBenchPlayerId)?.name||'')+'</b>. Ora scegli chi sostituire in campo.')+
+      '</div>'+
+      '<div class="bench-list">'+
+      remaining.map(p=>
+        '<button class="bench-player '+(p.id===selectedBenchPlayerId?'selected':'')+
+        '" onclick="selectBenchPlayer('+p.id+')">'+
+          esc(p.name)+'<small>'+p.role+' · '+p.price+'</small>'+
+        '</button>'
+      ).join('')+
+      '</div>'
+    : '<div class="empty">Nessun giocatore in panchina.</div>';
+
+  saveFormationState();
+}
+
+function selectBenchPlayer(playerId){
+  selectedBenchPlayerId=selectedBenchPlayerId===playerId?null:playerId;
+  renderFormation();
+}
+
+function selectFieldPlayer(playerId){
+  if(selectedBenchPlayerId===null) return;
+
+  const team=current?.teams.find(t=>t.id===formationTeamId);
+  if(!team) return;
+
+  const benchPlayer=team.players.find(p=>p.id===selectedBenchPlayerId);
+  const fieldPlayer=team.players.find(p=>p.id===playerId);
+
+  if(!benchPlayer||!fieldPlayer) return;
+
+  if(benchPlayer.role!==fieldPlayer.role){
+    const hint=$('formationBench');
+    if(hint){
+      const old=hint.querySelector('.bench-hint');
+      if(old) old.innerHTML='⚠️ Puoi sostituire solo un giocatore dello <b>stesso ruolo</b>. Seleziona un '+benchPlayer.role+' in campo.';
+    }
+    return;
+  }
+
+  const starters=getFormationStarters(team,team.formationModule||'3-4-3');
+  team.formationStarters=starters.map(p=>p.id===fieldPlayer.id?benchPlayer.id:p.id);
+
+  selectedBenchPlayerId=null;
+  saveFormationState();
+  renderFormation();
+}
+
+function setFormationModule(module){
+  if(!current||formationTeamId===null) return;
+  const team=current.teams.find(t=>t.id===formationTeamId);
+  if(!team) return;
+
+  team.formationModule=module;
+  team.formationStarters=null;
+  selectedBenchPlayerId=null;
+  saveFormationState();
+  renderFormation();
+}
 
 /* =========================
    RENDER GENERALE
