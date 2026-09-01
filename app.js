@@ -516,7 +516,7 @@ function renderFormation(){
  const mod=FORMATION_MODULES[saved];
  const starters=[formationAutoLine(team.players,'P',1),formationAutoLine(team.players,'D',mod[0]),formationAutoLine(team.players,'C',mod[1]),formationAutoLine(team.players,'A',mod[2])];
  const used=new Set(starters.flat().map(p=>p.id)),positions=['82%','61%','39%','16%'];
- pitch.className='pitch';pitch.innerHTML=pitchArtwork()+starters.map((line,i)=>'<div class="formation-line" style="top:'+positions[i]+'">'+line.map(p=>'<div class="formation-player"><div class="formation-shirt">'+p.role+'</div><div class="formation-player-name">'+esc(p.name)+'</div><div class="formation-player-price">'+p.price+' crediti</div></div>').join('')+'</div>').join('');
+ pitch.className='pitch';pitch.innerHTML=pitchArtwork()+starters.map((line,i)=>'<div class="formation-line" style="top:'+positions[i]+'">'+line.map(p=>'<div class="formation-player"><div class="formation-shirt">'+p.role+'</div><div class="formation-player-name">'+esc(p.name)+'</div><div class="formation-player-price">'+p.price+'</div></div>').join('')+'</div>').join('');
  const remaining=team.players.filter(p=>!used.has(p.id)).sort((a,b)=>b.price-a.price);
  bench.innerHTML=remaining.length?'<div class="bench-list">'+remaining.map(p=>'<div class="bench-player">'+esc(p.name)+'<small>'+p.role+' · '+p.price+'</small></div>').join('')+'</div>':'<div class="empty">Nessun giocatore in panchina.</div>';
 }
