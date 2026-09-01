@@ -1044,6 +1044,60 @@ label{
   box-shadow:0 0 0 3px rgba(255,214,10,.95),0 3px 8px rgba(0,0,0,.32);
 }
 
+
+/* =========================
+   COLORI GLOBALI PER RUOLO
+========================= */
+
+:root{
+  --role-p:#ff8a00;
+  --role-p-soft:#fff0dc;
+  --role-d:#2fa80f;
+  --role-d-soft:#e7f6df;
+  --role-c:#1677ff;
+  --role-c-soft:#e5f0ff;
+  --role-a:#ef2b23;
+  --role-a-soft:#ffe8e6;
+}
+
+.role-tag{color:#fff;border:0}
+.role-tag.role-P{background:var(--role-p)}
+.role-tag.role-D{background:var(--role-d)}
+.role-tag.role-C{background:var(--role-c)}
+.role-tag.role-A{background:var(--role-a)}
+
+.countpill.role-P{background:var(--role-p-soft);color:#8d4b00}
+.countpill.role-D{background:var(--role-d-soft);color:#176b08}
+.countpill.role-C{background:var(--role-c-soft);color:#0756bd}
+.countpill.role-A{background:var(--role-a-soft);color:#b41b15}
+.countpill.role-P b{color:var(--role-p)}
+.countpill.role-D b{color:var(--role-d)}
+.countpill.role-C b{color:var(--role-c)}
+.countpill.role-A b{color:var(--role-a)}
+
+.chip.role-P.active{background:var(--role-p);color:#fff}
+.chip.role-D.active{background:var(--role-d);color:#fff}
+.chip.role-C.active{background:var(--role-c);color:#fff}
+.chip.role-A.active{background:var(--role-a);color:#fff}
+.chip.role-P:not(.active){color:#b15d00;background:var(--role-p-soft)}
+.chip.role-D:not(.active){color:#176b08;background:var(--role-d-soft)}
+.chip.role-C:not(.active){color:#0756bd;background:var(--role-c-soft)}
+.chip.role-A:not(.active){color:#b41b15;background:var(--role-a-soft)}
+
+.formation-player.role-P .formation-shirt{background:var(--role-p);color:#fff}
+.formation-player.role-D .formation-shirt{background:var(--role-d);color:#fff}
+.formation-player.role-C .formation-shirt{background:var(--role-c);color:#fff}
+.formation-player.role-A .formation-shirt{background:var(--role-a);color:#fff}
+
+.bench-player.role-P{background:var(--role-p-soft);border-color:rgba(255,138,0,.18)}
+.bench-player.role-D{background:var(--role-d-soft);border-color:rgba(47,168,15,.18)}
+.bench-player.role-C{background:var(--role-c-soft);border-color:rgba(22,119,255,.18)}
+.bench-player.role-A{background:var(--role-a-soft);border-color:rgba(239,43,35,.18)}
+
+.bench-player.role-P.selected{background:var(--role-p);border-color:var(--role-p)}
+.bench-player.role-D.selected{background:var(--role-d);border-color:var(--role-d)}
+.bench-player.role-C.selected{background:var(--role-c);border-color:var(--role-c)}
+.bench-player.role-A.selected{background:var(--role-a);border-color:var(--role-a)}
 /* DESKTOP */
 
 @media(min-width:431px){
@@ -1321,28 +1375,28 @@ label{
   <div class="chips">
 
     <button
-      class="chip active"
+      class="chip role-P active"
       onclick="setRole('P',this)">
       P
     </button>
 
 
     <button
-      class="chip"
+      class="chip role-D"
       onclick="setRole('D',this)">
       D
     </button>
 
 
     <button
-      class="chip"
+      class="chip role-C"
       onclick="setRole('C',this)">
       C
     </button>
 
 
     <button
-      class="chip"
+      class="chip role-A"
       onclick="setRole('A',this)">
       A
     </button>
