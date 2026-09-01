@@ -376,19 +376,19 @@ function counts(t){
 
     return `
 
-        <span class="countpill">
+        <span class="countpill role-P">
             <b>P</b>${c.P}/${roleLimits().P}
         </span>
 
-        <span class="countpill">
+        <span class="countpill role-D">
             <b>D</b>${c.D}/${roleLimits().D}
         </span>
 
-        <span class="countpill">
+        <span class="countpill role-C">
             <b>C</b>${c.C}/${roleLimits().C}
         </span>
 
-        <span class="countpill">
+        <span class="countpill role-A">
             <b>A</b>${c.A}/${roleLimits().A}
         </span>
 
@@ -601,7 +601,7 @@ function renderFormation(){
     starters.map((line,i)=>
       '<div class="formation-line" style="top:'+positions[i]+'">'+
       line.map(p=>
-        '<button class="formation-player '+(selectedBenchPlayerId!==null?'swap-target':'')+
+        '<button class="formation-player role-'+p.role+' '+(selectedBenchPlayerId!==null?'swap-target':'')+
         '" onclick="selectFieldPlayer('+p.id+')" aria-label="Giocatore '+esc(p.name)+'">'+
           '<div class="formation-shirt">'+p.role+'</div>'+
           '<div class="formation-player-name">'+esc(p.name)+'</div>'+
@@ -623,7 +623,7 @@ function renderFormation(){
       '</div>'+
       '<div class="bench-list">'+
       remaining.map(p=>
-        '<button class="bench-player '+(p.id===selectedBenchPlayerId?'selected':'')+
+        '<button class="bench-player role-'+p.role+' '+(p.id===selectedBenchPlayerId?'selected':'')+
         '" onclick="selectBenchPlayer('+p.id+')">'+
           esc(p.name)+'<small>'+p.role+' · '+p.price+'</small>'+
         '</button>'
@@ -802,7 +802,7 @@ function render(){
 
                                 ${esc(p.name)}
 
-                                <span class="tag">
+                                <span class="tag role-tag role-${p.role}">
                                     ${p.role}
                                 </span>
 
@@ -924,7 +924,7 @@ function searchPlayers(){
 
                 <div class="meta">
 
-                    <span class="tag">
+                    <span class="tag role-tag role-${p.role}">
                         ${p.role}
                     </span>
 
@@ -1206,8 +1206,7 @@ function openPlayer(id, source){
 
                 <div class="meta">
 
-                    ${p.role}
-                    ·
+                    <span class="tag role-tag role-${p.role}">${p.role}</span>
                     ${esc(p.team)}
 
                 </div>
@@ -2273,8 +2272,8 @@ function renderSetup(){
                         <div class="meta">
 
                             ${esc(p.team)}
-                            ·
-                            Appetibilità:
+                            <span class="tag role-tag role-${p.role}">${p.role}</span>
+                            · Appetibilità:
                             ${p.appeal ?? '—'}
 
                         </div>
@@ -2448,7 +2447,7 @@ function renderObjectives(){
                         <div class="meta">
 
                             ${esc(p.team)}
-                            ·
+                            <span class="tag role-tag role-${p.role}">${p.role}</span>
 
                             ${
                                 sold.has(p.id)
