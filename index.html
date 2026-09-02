@@ -508,6 +508,14 @@ label{
   color:#fff;
 }
 
+.free-chips{
+  grid-template-columns:1.35fr repeat(4,1fr);
+}
+
+.free-chips .chip.active{
+  background:var(--ink);
+  color:#fff;
+}
 
 /* FILTRO DISPONIBILITÀ OBIETTIVI */
 
@@ -645,6 +653,14 @@ label{
   line-height:20px;
 
   margin-bottom:1px;
+}
+
+.free-player-icon{
+  display:block;
+  width:22px;
+  height:22px;
+  margin-bottom:1px;
+  fill:currentColor;
 }
 
 
@@ -1448,6 +1464,59 @@ label{
 
 
 
+<!-- FREE -->
+
+<section id="free" class="screen">
+
+  <div class="head">
+
+    <div class="h2">
+      <span style="color:var(--green)">♟</span> Free
+    </div>
+
+    <div class="meta">
+      Calciatori ancora liberi
+    </div>
+
+  </div>
+
+  <div class="chips free-chips">
+
+    <button class="chip active" onclick="setFreeRole('ALL',this)">
+      Tutti
+    </button>
+
+    <button class="chip role-P" onclick="setFreeRole('P',this)">
+      P
+    </button>
+
+    <button class="chip role-D" onclick="setFreeRole('D',this)">
+      D
+    </button>
+
+    <button class="chip role-C" onclick="setFreeRole('C',this)">
+      C
+    </button>
+
+    <button class="chip role-A" onclick="setFreeRole('A',this)">
+      A
+    </button>
+
+  </div>
+
+  <div class="card" style="margin-top:12px">
+
+    <div class="meta" style="margin-bottom:10px">
+      Ordinati per appetibilità, dal più alto al più basso
+    </div>
+
+    <div id="freeList"></div>
+
+  </div>
+
+</section>
+
+
 <!-- ARCHIVIO -->
 
 <section id="archive" class="screen">
@@ -1497,7 +1566,6 @@ label{
   </button>
 
 
-
   <button
     class="nav"
     data-s="auction"
@@ -1510,6 +1578,33 @@ label{
   </button>
 
 
+  <button
+    class="nav"
+    data-s="objectives"
+    onclick="go('objectives')">
+
+    <span class="navicon">★</span>
+
+    Obiettivi
+
+  </button>
+
+
+  <button
+    class="nav"
+    data-s="free"
+    onclick="go('free')"
+    aria-label="Free">
+
+    <svg class="free-player-icon" viewBox="0 0 64 64" aria-hidden="true">
+      <circle cx="34" cy="9" r="7"></circle>
+      <path d="M27 18c5-2 10-2 15 0l5 15-9 3-3-8 3 13 10 10-5 6-13-12-6 13-8-3 7-20-8 3-3-7 12-5z"></path>
+    </svg>
+
+    Free
+
+  </button>
+
 
   <button
     class="nav"
@@ -1519,19 +1614,6 @@ label{
     <span class="navicon">👥</span>
 
     Squadre
-
-  </button>
-
-
-
-  <button
-    class="nav"
-    data-s="objectives"
-    onclick="go('objectives')">
-
-    <span class="navicon">★</span>
-
-    Obiettivi
 
   </button>
 
