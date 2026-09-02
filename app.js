@@ -1115,12 +1115,120 @@ function setFreeRole(role, el){
 
     if(el) el.classList.add('active');
 
+    renderFreeSuggestions();
+
     renderFree();
 
 }
 
 
 function searchFreePlayers(){
+
+    renderFreeSuggestions();
+
+    renderFree();
+
+}
+
+
+function renderFreeSuggestions(){
+
+    const box = $('freeSuggestions');
+
+    if(!box) return;
+
+    const query = ($('freeQ')?.value || '')
+        .trim()
+        .toLowerCase();
+
+    if(!query || !current){
+
+        box.style.display = 'none';
+        box.innerHTML = '';
+
+        return;
+
+    }
+
+
+    const sold = new Set();
+
+    current.teams.forEach(t => {
+        t.players.forEach(p => sold.add(p.id));
+    });
+
+
+    const matches = PLAYERS
+        .filter(p =>
+            !sold.has(p.id) &&
+            (freeRole === 'ALL' || p.role === freeRole) &&
+            p.name.toLowerCase().includes(query)
+        )
+        .sort((a,b) => a.name.localeCompare(b.name, 'it'))
+        .slice(0, 8);
+
+
+    if(!matches.length){
+
+        box.style.display = 'none';
+        box.innerHTML = '';
+
+        return;
+
+    }
+
+
+    box.innerHTML = matches.map(p => `
+
+        <button
+            class="free-suggestion"
+            type="button"
+            onclick="selectFreeSuggestion(${p.id})">
+
+            <div>
+
+                <div class="free-suggestion-name">
+                    ${esc(p.name)}
+                </div>
+
+                <div class="free-suggestion-meta">
+                    ${esc(p.team)}
+                </div>
+
+            </div>
+
+            <span class="tag role-tag role-${p.role}">
+                ${p.role}
+            </span>
+
+        </button>
+
+    `).join('');
+
+
+    box.style.display = 'block';
+
+}
+
+
+function selectFreeSuggestion(id){
+
+    const p = PLAYERS.find(x => x.id === id);
+
+    if(!p) return;
+
+    const input = $('freeQ');
+
+    if(input) input.value = p.name;
+
+    const box = $('freeSuggestions');
+
+    if(box){
+
+        box.style.display = 'none';
+        box.innerHTML = '';
+
+    }
 
     renderFree();
 
