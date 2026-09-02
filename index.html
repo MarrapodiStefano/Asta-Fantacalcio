@@ -1480,7 +1480,18 @@ label{
 
   </div>
 
-  <div class="chips free-chips">
+  <div class="searchbox" style="margin-top:14px">
+
+    <input
+      id="freeQ"
+      type="search"
+      placeholder="Cerca un calciatore libero..."
+      autocomplete="off"
+      oninput="searchFreePlayers()">
+
+  </div>
+
+  <div class="chips free-chips" style="margin-top:12px">
 
     <button class="chip active" onclick="setFreeRole('ALL',this)">
       Tutti
