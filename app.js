@@ -1120,6 +1120,13 @@ function setFreeRole(role, el){
 }
 
 
+function searchFreePlayers(){
+
+    renderFree();
+
+}
+
+
 function renderFree(){
 
     const box = $('freeList');
@@ -1146,10 +1153,18 @@ function renderFree(){
     });
 
 
+    const query = ($('freeQ')?.value || '')
+        .trim()
+        .toLowerCase();
+
     const arr = PLAYERS
         .filter(p =>
             !sold.has(p.id) &&
-            (freeRole === 'ALL' || p.role === freeRole)
+            (freeRole === 'ALL' || p.role === freeRole) &&
+            (
+                !query ||
+                p.name.toLowerCase().includes(query)
+            )
         )
         .sort((a,b) => {
             const appealA = Number(a.appeal);
