@@ -663,6 +663,53 @@ label{
   fill:currentColor;
 }
 
+.free-search-wrap{
+  position:relative;
+  z-index:20;
+}
+
+.free-suggestions{
+  display:none;
+  position:absolute;
+  top:calc(100% + 6px);
+  left:0;
+  right:0;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 12px 30px rgba(0,0,0,.14);
+}
+
+.free-suggestion{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:12px 14px;
+  border:0;
+  border-bottom:1px solid var(--line);
+  background:#fff;
+  color:var(--ink);
+  text-align:left;
+  font:inherit;
+}
+
+.free-suggestion:last-child{
+  border-bottom:0;
+}
+
+.free-suggestion-name{
+  font-weight:850;
+}
+
+.free-suggestion-meta{
+  font-size:13px;
+  color:var(--muted);
+  margin-top:2px;
+}
+
 
 /* MODALE */
 
@@ -1480,14 +1527,21 @@ label{
 
   </div>
 
-  <div class="searchbox" style="margin-top:14px">
+  <div class="free-search-wrap" style="margin-top:14px">
 
-    <input
-      id="freeQ"
-      type="search"
-      placeholder="Cerca un calciatore libero..."
-      autocomplete="off"
-      oninput="searchFreePlayers()">
+    <div class="searchbox">
+
+      <input
+        id="freeQ"
+        type="search"
+        placeholder="Cerca un calciatore libero..."
+        autocomplete="off"
+        oninput="searchFreePlayers()"
+        onfocus="searchFreePlayers()">
+
+    </div>
+
+    <div id="freeSuggestions" class="free-suggestions"></div>
 
   </div>
 
