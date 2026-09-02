@@ -10,6 +10,8 @@ let objRole = 'P';
 
 let objStatus = 'available';
 
+let freeRole = 'ALL';
+
 
 const $ = id => document.getElementById(id);
 
@@ -966,6 +968,8 @@ function render(){
 
     renderObjectives();
 
+    renderFree();
+
     renderArchive();
 
 }
@@ -1091,6 +1095,129 @@ function searchPlayers(){
 
             </div>
 
+        `;
+
+}
+
+
+
+/* =========================
+   CALCIATORI FREE
+========================= */
+
+function setFreeRole(role, el){
+
+    freeRole = role;
+
+    document
+        .querySelectorAll('#free .chip')
+        .forEach(x => x.classList.remove('active'));
+
+    if(el) el.classList.add('active');
+
+    renderFree();
+
+}
+
+
+function renderFree(){
+
+    const box = $('freeList');
+
+    if(!box) return;
+
+    if(!current){
+
+        box.innerHTML = `
+            <div class="empty">
+                Crea o apri prima un'asta.
+            </div>
+        `;
+
+        return;
+
+    }
+
+
+    const sold = new Set();
+
+    current.teams.forEach(t => {
+        t.players.forEach(p => sold.add(p.id));
+    });
+
+
+    const arr = PLAYERS
+        .filter(p =>
+            !sold.has(p.id) &&
+            (freeRole === 'ALL' || p.role === freeRole)
+        )
+        .sort((a,b) => {
+            const appealA = Number(a.appeal);
+            const appealB = Number(b.appeal);
+
+            const validA = Number.isFinite(appealA);
+            const validB = Number.isFinite(appealB);
+
+            if(validA && validB && appealB !== appealA){
+                return appealB - appealA;
+            }
+
+            if(validA !== validB){
+                return validA ? -1 : 1;
+            }
+
+            return a.name.localeCompare(b.name, 'it');
+        });
+
+
+    box.innerHTML = arr.length
+
+        ? arr.map(p => `
+
+            <div
+                class="result"
+                onclick="openPlayer(${p.id}, 'free')">
+
+                <div class="head">
+
+                    <div>
+
+                        <div class="name">
+                            ${esc(p.name)}
+                        </div>
+
+                        <div class="meta">
+                            <span class="tag role-tag role-${p.role}">
+                                ${p.role}
+                            </span>
+
+                            ${esc(p.team)}
+                        </div>
+
+                    </div>
+
+                    <div style="text-align:right">
+
+                        <div class="small muted">
+                            Appetibilità
+                        </div>
+
+                        <div style="font-size:20px;font-weight:900">
+                            ${p.appeal ?? '—'}
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `).join('')
+
+        : `
+            <div class="empty">
+                Nessun calciatore libero per questo filtro.
+            </div>
         `;
 
 }
