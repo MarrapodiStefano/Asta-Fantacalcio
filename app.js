@@ -1719,9 +1719,22 @@ function openPlayer(id, source){
 
             <div>
 
-                <div class="playername">
+                <div class="player-title-row">
 
-                    ${esc(p.name)}
+                    <div class="playername">
+
+                        ${esc(p.name)}
+
+                    </div>
+
+                    ${current.objectives.includes(p.id)
+                        ? `
+                            <span class="tag goal player-goal" title="${PRIORITIES[objectivePriority(p.id)].label}">
+                                ${PRIORITIES[objectivePriority(p.id)].icon}
+                            </span>
+                          `
+                        : ''
+                    }
 
                 </div>
 
@@ -1744,18 +1757,6 @@ function openPlayer(id, source){
                 title="Chiudi">
                 ×
             </button>
-
-            ${
-                current.objectives.includes(p.id)
-
-                ? `
-                    <span class="tag goal" title="${PRIORITIES[objectivePriority(p.id)].label}">
-                        ${PRIORITIES[objectivePriority(p.id)].icon}
-                    </span>
-                  `
-
-                : ''
-            }
 
         </div>
 
