@@ -95,37 +95,55 @@ async function refreshApp(){
 
     try{
 
-        // Chiediamo esplicitamente al browser di verificare una nuova versione
-        // del Service Worker e quindi dei file pubblicati su GitHub Pages.
+        // Controllo esplicito del Service Worker.
         if('serviceWorker' in navigator){
 
             const reg = await navigator.serviceWorker.getRegistration();
 
             if(reg){
+
                 await reg.update();
 
+                // Se esiste una nuova versione pronta, attivala subito.
                 if(reg.waiting){
                     reg.waiting.postMessage({type:'SKIP_WAITING'});
                 }
+
+                // Aspettiamo il cambio effettivo del controller.
+                await new Promise(resolve => {
+                    let done = false;
+
+                    const finish = () => {
+                        if(done) return;
+                        done = true;
+                        navigator.serviceWorker.removeEventListener('controllerchange', finish);
+                        resolve();
+                    };
+
+                    navigator.serviceWorker.addEventListener('controllerchange', finish);
+
+                    // Fallback: non bloccare l'aggiornamento se iOS non invia l'evento.
+                    setTimeout(finish, 1200);
+                });
             }
         }
 
-        // Piccolo intervallo per permettere l'attivazione della nuova cache.
-        setTimeout(() => {
-            window.location.reload();
-        }, 350);
+        // Bypass della cache anche per il documento principale.
+        window.location.replace(
+            window.location.pathname + '?update=' + Date.now()
+        );
 
     }
     catch(err){
 
-        // Anche in caso di errore nel controllo del Service Worker,
-        // eseguiamo comunque un normale refresh della pagina.
         console.warn('Aggiornamento PWA:', err);
 
-        window.location.reload();
+        // Anche senza Service Worker forziamo una richiesta nuova al server.
+        window.location.replace(
+            window.location.pathname + '?update=' + Date.now()
+        );
     }
 }
-
 
 function go(id){
 
