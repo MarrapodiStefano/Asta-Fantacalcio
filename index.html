@@ -1213,6 +1213,38 @@ label{
 .bench-player.role-D.selected{background:var(--role-d);border-color:var(--role-d)}
 .bench-player.role-C.selected{background:var(--role-c);border-color:var(--role-c)}
 .bench-player.role-A.selected{background:var(--role-a);border-color:var(--role-a)}
+/* PULSANTE AGGIORNA PWA */
+.refresh-app-btn{
+  width:52px;
+  height:52px;
+  border:0;
+  border-radius:16px;
+  background:var(--dark);
+  color:#fff;
+  font-size:34px;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  flex:0 0 auto;
+  box-shadow:0 6px 18px rgba(20,30,45,.12);
+}
+
+.refresh-app-btn:active{
+  transform:scale(.96);
+}
+
+.refresh-app-btn.loading{
+  pointer-events:none;
+  animation:refresh-spin .8s linear infinite;
+}
+
+@keyframes refresh-spin{
+  from{transform:rotate(0)}
+  to{transform:rotate(360deg)}
+}
+
 /* DESKTOP */
 
 @media(min-width:431px){
@@ -1251,7 +1283,7 @@ label{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.3</span>
+        <span class="app-version">V. 2.4</span>
       </div>
 
       <div class="sub" id="sub">
@@ -1259,6 +1291,16 @@ label{
       </div>
 
     </div>
+
+    <button
+      id="refreshAppBtn"
+      class="refresh-app-btn"
+      type="button"
+      onclick="refreshApp()"
+      aria-label="Aggiorna l'app"
+      title="Aggiorna l'app">
+      ↻
+    </button>
 
   </div>
 
