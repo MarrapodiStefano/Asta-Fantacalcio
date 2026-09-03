@@ -110,12 +110,18 @@ function openModal(h){
 
     $('modal').classList.add('show');
 
+    // Ogni apertura parte sempre dall'inizio della scheda.
+    $('sheet').scrollTop = 0;
+
 }
 
 
 function closeModal(){
 
     $('modal').classList.remove('show');
+
+    // Evita di conservare la precedente posizione di scorrimento.
+    $('sheet').scrollTop = 0;
 
 }
 
@@ -1646,6 +1652,34 @@ function recommendedOffer(player){
    SCHEDA CALCIATORE
 ========================= */
 
+function closePlayer(source){
+
+    // Chiudendo una scheda aperta dalla sezione Asta,
+    // liberiamo anche la ricerca precedente.
+    if(source !== 'free'){
+        const q = $('q');
+        const results = $('results');
+
+        if(q) q.value = '';
+        if(results) results.innerHTML = '';
+    }
+
+    if(source === 'free'){
+        const freeQ = $('freeQ');
+        const suggestions = $('freeSuggestions');
+
+        if(freeQ) freeQ.value = '';
+        if(suggestions){
+            suggestions.style.display = 'none';
+            suggestions.innerHTML = '';
+        }
+
+        renderFree();
+    }
+
+    closeModal();
+}
+
 function openPlayer(id, source){
 
     let p =
@@ -1681,7 +1715,7 @@ function openPlayer(id, source){
     openModal(`
 
 
-        <div class="head">
+        <div class="head player-modal-head">
 
             <div>
 
@@ -1701,6 +1735,15 @@ function openPlayer(id, source){
 
             </div>
 
+
+            <button
+                class="player-close"
+                type="button"
+                onclick="closePlayer('${source === 'free' ? 'free' : 'auction'}')"
+                aria-label="Chiudi scheda giocatore"
+                title="Chiudi">
+                ×
+            </button>
 
             ${
                 current.objectives.includes(p.id)
@@ -2088,7 +2131,7 @@ function openHistory(){
         <button
             class="btn secondary"
             style="width:100%;margin-top:8px"
-            onclick="closeModal()">
+            onclick="closePlayer('${source === 'free' ? 'free' : 'auction'}')">
 
             Chiudi
 
