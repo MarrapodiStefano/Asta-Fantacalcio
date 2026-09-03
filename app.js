@@ -2219,7 +2219,7 @@ function openHistory(){
         <button
             class="btn secondary"
             style="width:100%;margin-top:8px"
-            onclick="closePlayer('${source === 'free' ? 'free' : 'auction'}')">
+            onclick="closeModal()">
 
             Chiudi
 
