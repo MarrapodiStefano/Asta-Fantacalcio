@@ -159,12 +159,14 @@ function go(id){
 
 function openModal(h){
 
+    const sheet = $('sheet').closest('.sheet');
+
     $('sheet').innerHTML = h;
 
     $('modal').classList.add('show');
 
-    // Ogni apertura parte sempre dall'inizio della scheda.
-    $('sheet').scrollTop = 0;
+    // Ogni apertura parte sempre realmente dall'inizio della pagina.
+    sheet.scrollTop = 0;
 
 }
 
@@ -177,7 +179,7 @@ function closeModal(){
     $('sheet').closest('.sheet').classList.remove('history-fullscreen');
 
     // Evita di conservare la precedente posizione di scorrimento.
-    $('sheet').scrollTop = 0;
+    $('sheet').closest('.sheet').scrollTop = 0;
 
 }
 
