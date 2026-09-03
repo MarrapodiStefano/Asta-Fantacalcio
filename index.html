@@ -58,9 +58,33 @@ body{
 }
 
 /* ORIENTAMENTO
-   Il manifest richiede portrait. Su iPhone/iOS il blocco fisico
-   dell'orientamento non è garantito, quindi evitiamo anche che il
-   layout passi alla modalità desktop quando il telefono viene ruotato. */
+   Su iPhone/iOS il blocco fisico dell'orientamento non è garantito.
+   In landscape nascondiamo l'app e mostriamo un avviso, mantenendo
+   l'esperienza esclusivamente progettata per l'uso verticale. */
+@media screen and (orientation:landscape) and (max-width:932px){
+  body::before{
+    content:"↻\A Ruota l’iPhone in verticale";
+    white-space:pre-line;
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    box-sizing:border-box;
+    background:var(--bg);
+    color:var(--ink);
+    font-size:22px;
+    font-weight:850;
+    line-height:1.45;
+    text-align:center;
+  }
+
+  .app{
+    visibility:hidden;
+  }
+}
 .app{
   width:100%;
   max-width:430px;
@@ -1366,7 +1390,7 @@ label{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.9.14</span>
+        <span class="app-version">V. 2.9.15</span>
       </div>
 
       <div class="sub" id="sub">
