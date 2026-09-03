@@ -13,6 +13,17 @@ let objStatus = 'available';
 let freeRole = 'ALL';
 
 
+/* Calciatori aggiunti manualmente: vengono salvati dentro l'asta */
+function allPlayers(){
+    return [
+        ...PLAYERS,
+        ...((current && Array.isArray(current.extraPlayers))
+            ? current.extraPlayers
+            : [])
+    ];
+}
+
+
 const $ = id => document.getElementById(id);
 
 
@@ -303,7 +314,9 @@ function createAuction(){
 
             spent:0,
 
-            players:[]
+            players:[],
+
+        extraPlayers:[]
 
         })),
 
@@ -1018,7 +1031,7 @@ function searchPlayers(){
 
 
     let arr =
-        PLAYERS
+        allPlayers()
         .filter(p =>
             p.name
             .toLowerCase()
@@ -1102,6 +1115,113 @@ function searchPlayers(){
 
 
 /* =========================
+   AGGIUNGI CALCIATORE
+========================= */
+
+function openAddPlayer(){
+    if(!current){
+        alert('Apri prima un’asta.');
+        return;
+    }
+
+    openModal(`
+        <div class="playername">➕ Aggiungi calciatore</div>
+        <div class="meta" style="margin:6px 0 18px">
+            Il giocatore sarà subito disponibile in Asta e nella sezione Free.
+        </div>
+
+        <div class="form">
+            <label>Nome calciatore *</label>
+            <input id="newPlayerName" placeholder="Es. Mario Rossi" autocomplete="off">
+
+            <label>Ruolo *</label>
+            <select id="newPlayerRole">
+                <option value="P">Portiere (P)</option>
+                <option value="D">Difensore (D)</option>
+                <option value="C">Centrocampista (C)</option>
+                <option value="A">Attaccante (A)</option>
+            </select>
+
+            <label>Squadra *</label>
+            <input id="newPlayerTeam" placeholder="Es. Milan" autocomplete="off">
+
+            <div class="grid2" style="gap:10px">
+                <div>
+                    <label>Crediti</label>
+                    <input id="newPlayerCredits" type="number" min="0" step="0.1" value="0">
+                </div>
+                <div>
+                    <label>% crediti</label>
+                    <input id="newPlayerPct" type="number" min="0" step="0.01" placeholder="Facoltativo">
+                </div>
+            </div>
+
+            <div class="grid2" style="gap:10px">
+                <div>
+                    <label>PMV</label>
+                    <input id="newPlayerPmv" type="number" min="0" step="0.1" placeholder="Facoltativo">
+                </div>
+                <div>
+                    <label>Appetibilità</label>
+                    <input id="newPlayerAppeal" type="number" min="0" step="0.1" placeholder="Facoltativo">
+                </div>
+            </div>
+        </div>
+
+        <button class="btn primary" style="width:100%;margin-top:18px" onclick="saveNewPlayer()">
+            ➕ Aggiungi al listone
+        </button>
+    `);
+}
+
+function saveNewPlayer(){
+    const name = ($('newPlayerName')?.value || '').trim();
+    const role = $('newPlayerRole')?.value || '';
+    const team = ($('newPlayerTeam')?.value || '').trim();
+
+    if(!name || !role || !team){
+        alert('Inserisci almeno nome, ruolo e squadra.');
+        return;
+    }
+
+    const normalizeName = s => s.trim().toLowerCase();
+    const duplicate = allPlayers().some(p =>
+        normalizeName(p.name || '') === normalizeName(name) &&
+        p.role === role &&
+        normalizeName(p.team || '') === normalizeName(team)
+    );
+
+    if(duplicate){
+        alert('Questo calciatore è già presente nel listone.');
+        return;
+    }
+
+    const num = id => {
+        const raw = ($(id)?.value || '').trim();
+        return raw === '' ? null : Number(raw);
+    };
+
+    if(!Array.isArray(current.extraPlayers)) current.extraPlayers = [];
+
+    current.extraPlayers.push({
+        id: 'manual-' + Date.now(),
+        role,
+        name,
+        team,
+        credits: num('newPlayerCredits') ?? 0,
+        pct: num('newPlayerPct'),
+        pmv: num('newPlayerPmv'),
+        appeal: num('newPlayerAppeal'),
+        manual: true
+    });
+
+    persist();
+    closeModal();
+
+    alert(name + ' è stato aggiunto ed è subito disponibile.');
+}
+
+/* =========================
    CALCIATORI FREE
 ========================= */
 
@@ -1158,7 +1278,7 @@ function renderFreeSuggestions(){
     });
 
 
-    const matches = PLAYERS
+    const matches = allPlayers()
         .filter(p =>
             !sold.has(p.id) &&
             (freeRole === 'ALL' || p.role === freeRole) &&
@@ -1213,7 +1333,7 @@ function renderFreeSuggestions(){
 
 function selectFreeSuggestion(id){
 
-    const p = PLAYERS.find(x => x.id === id);
+    const p = allPlayers().find(x => x.id === id);
 
     if(!p) return;
 
@@ -1265,7 +1385,7 @@ function renderFree(){
         .trim()
         .toLowerCase();
 
-    const arr = PLAYERS
+    const arr = allPlayers()
         .filter(p =>
             !sold.has(p.id) &&
             (freeRole === 'ALL' || p.role === freeRole) &&
@@ -1428,7 +1548,7 @@ function availableObjectiveCount(role, priority){
         t.players.forEach(p => sold.add(p.id));
     });
 
-    return PLAYERS.filter(p =>
+    return allPlayers().filter(p =>
         p.role === role &&
         current.objectives.includes(p.id) &&
         !sold.has(p.id) &&
@@ -1529,7 +1649,7 @@ function recommendedOffer(player){
 function openPlayer(id, source){
 
     let p =
-        PLAYERS.find(x => x.id == id);
+        allPlayers().find(x => x.id == id);
 
 
     let owner = null;
@@ -1819,7 +1939,7 @@ function assignPlayer(id){
     }
 
     let p =
-        PLAYERS.find(x => x.id == id);
+        allPlayers().find(x => x.id == id);
 
 
     const buyerValue = $('buyer').value;
@@ -2603,7 +2723,7 @@ function renderSetup(){
 
 
     let arr =
-        PLAYERS
+        allPlayers()
         .filter(p =>
             p.role === r &&
             (
@@ -2771,7 +2891,7 @@ function renderObjectives(){
 
 
     let arr =
-        PLAYERS
+        allPlayers()
         .filter(p =>
             p.role === objRole &&
             current.objectives.includes(p.id) &&
