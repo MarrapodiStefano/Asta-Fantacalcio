@@ -103,15 +103,35 @@ body{
   white-space:nowrap;
 }
 
-/* CHIUSURA RAPIDA SCHEDA CALCIATORE */
+/* SCHEDA CALCIATORE: TITOLO, OBIETTIVO E CHIUSURA */
+.sheet{
+  position:relative;
+}
+
 .player-modal-head{
   align-items:flex-start;
+  padding-right:54px;
+}
+
+.player-title-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.player-goal{
+  margin:0;
+  align-self:center;
 }
 
 .player-close{
+  position:absolute;
+  top:16px;
+  right:16px;
+  z-index:3;
   width:42px;
   height:42px;
-  flex:0 0 42px;
   border:1px solid var(--line);
   border-radius:50%;
   background:#f5f6f8;
@@ -1231,7 +1251,7 @@ label{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.1</span>
+        <span class="app-version">V. 2.2</span>
       </div>
 
       <div class="sub" id="sub">
