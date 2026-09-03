@@ -54,6 +54,29 @@ body{
   min-height:100vh;
 }
 
+/* iPHONE: MANTIENI L'APP IN MODALITÀ VERTICALE */
+@media screen and (orientation:landscape) and (max-width:932px){
+  body::before{
+    content:"↻ Ruota l’iPhone in verticale";
+    position:fixed;
+    inset:0;
+    z-index:9999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:var(--bg);
+    color:var(--ink);
+    font-size:22px;
+    font-weight:850;
+    text-align:center;
+  }
+
+  .app{
+    visibility:hidden;
+  }
+}
+
 .app{
   width:100%;
   max-width:430px;
@@ -1359,7 +1382,7 @@ label{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.9.10</span>
+        <span class="app-version">V. 2.9.11</span>
       </div>
 
       <div class="sub" id="sub">
