@@ -1,6 +1,6 @@
 from openpyxl import load_workbook
 from pathlib import Path
-import json, re, hashlib
+import json, re, hashlib, unicodedata
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "Listone.xlsx"
@@ -8,7 +8,9 @@ TARGET = ROOT / "players.js"
 
 def norm(value):
     s = str(value or "").strip().lower()
-    s = re.sub(r"[^a-z0-9àèéìòóù%]+", "", s)
+    s = unicodedata.normalize("NFD", s)
+    s = "".join(c for c in s if unicodedata.category(c) != "Mn")
+    s = re.sub(r"[^a-z0-9%]+", "", s)
     return s
 
 ALIASES = {
@@ -17,7 +19,7 @@ ALIASES = {
     "name": {"nome", "giocatore", "name"},
     "team": {"squadra", "team", "club"},
     "credits": {"quotazione", "quota", "qt", "qta", "crediti", "credits"},
-    "pct": {"%", "percentuale", "pct", "percentualeacquisto"},
+    "pct": {"%", "percentuale", "pct", "percentualeacquisto", "percentualecrediti"},
     "pmv": {"pmv", "prezzomediovendita", "prezzomedio"},
     "appeal": {"appetibilita", "appeal"},
 }
