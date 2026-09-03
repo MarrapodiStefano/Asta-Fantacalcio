@@ -10,6 +10,9 @@ content="width=device-width,initial-scale=1,viewport-fit=cover">
 
 <meta name="theme-color" content="#111827">
 
+<!-- Richiesta di orientamento verticale per i browser/PWA che supportano Screen Orientation -->
+<meta name="screen-orientation" content="portrait">
+
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icon.svg">
@@ -54,7 +57,10 @@ body{
   min-height:100vh;
 }
 
-/* ORIENTAMENTO: layout progettato e mantenuto in formato verticale */
+/* ORIENTAMENTO
+   Il manifest richiede portrait. Su iPhone/iOS il blocco fisico
+   dell'orientamento non è garantito, quindi evitiamo anche che il
+   layout passi alla modalità desktop quando il telefono viene ruotato. */
 .app{
   width:100%;
   max-width:430px;
@@ -1324,7 +1330,7 @@ label{
 
 /* DESKTOP */
 
-@media(min-width:431px){
+@media(min-width:431px) and (pointer:fine){
 
   body{
     padding:15px 0;
@@ -1360,7 +1366,7 @@ label{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.9.12</span>
+        <span class="app-version">V. 2.9.13</span>
       </div>
 
       <div class="sub" id="sub">
@@ -1873,6 +1879,23 @@ label{
 
 <script src="app.js"></script>
 
+
+
+<script>
+/* Prova a bloccare l'orientamento dove la PWA/browser lo consente.
+   Su iPhone Safari/iOS può essere ignorato dal sistema operativo. */
+(function(){
+  function lockPortrait(){
+    if (screen.orientation && screen.orientation.lock) {
+      screen.orientation.lock("portrait").catch(function(){});
+    }
+  }
+  window.addEventListener("load", lockPortrait);
+  document.addEventListener("visibilitychange", function(){
+    if (!document.hidden) lockPortrait();
+  });
+})();
+</script>
 
 </body>
 
