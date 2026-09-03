@@ -1,1 +1,1 @@
-{"name":"Asta Fantacalcio","short_name":"Asta Fanta","start_url":"./","display":"standalone","background_color":"#111827","theme_color":"#111827","lang":"it","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
+{"name":"Asta Fantacalcio","short_name":"Asta Fanta","start_url":"./","display":"standalone","background_color":"#111827","theme_color":"#111827","lang":"it","icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}],"orientation":"portrait"}
