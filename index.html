@@ -202,6 +202,33 @@ body{
   flex:0 0 auto;
 }
 
+/* MODALITÀ PRIVACY SCHEDA CALCIATORE */
+.player-privacy{
+  position:absolute;
+  top:16px;
+  right:66px;
+  z-index:3;
+  width:42px;
+  height:42px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:#f5f6f8;
+  color:#29313d;
+  font-size:21px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+}
+
+.player-privacy:active{
+  transform:scale(.94);
+}
+
+.sheet.privacy-mode .player-private{
+  display:none;
+}
+
 .player-close{
   position:absolute;
   top:16px;
@@ -1390,7 +1417,7 @@ label{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.9.15</span>
+        <span class="app-version">V. 2.9.16</span>
       </div>
 
       <div class="sub" id="sub">
