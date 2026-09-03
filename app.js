@@ -2730,8 +2730,9 @@ function editObjectives(){
 
         <div class="small muted">
 
-            Tocca ☆ per aggiungere
-            o ★ per togliere un obiettivo.
+            Tocca il nome per aprire la scheda del calciatore.<br>
+            Tocca il simbolo a destra per scegliere il grado di appetibilità:
+            ☆ → ★ → 🔥 → ⭐ → 👍 → 🎲 → ☆.
 
         </div>
 
@@ -2840,10 +2841,8 @@ function renderSetup(){
         ($('oq')?.value || '')
         .toLowerCase();
 
-
     let r =
         window.setupR || 'P';
-
 
     let arr =
         allPlayers()
@@ -2858,58 +2857,52 @@ function renderSetup(){
         )
         .slice(0,100);
 
-
-
     $('setupList').innerHTML =
-        arr.map(p => `
+        arr.map(p => {
 
-            <div
-                class="result"
-                onclick="toggleObjective(${p.id})">
+            const isObjective = current.objectives.includes(p.id);
+            const priority = isObjective ? objectivePriority(p.id) : null;
+            const state = isObjective
+                ? (PRIORITIES[priority] || PRIORITIES.base)
+                : {icon:'☆', label:'Aggiungi agli obiettivi'};
 
+            return `
+                <div class="result">
 
-                <div class="head">
+                    <div
+                        class="head"
+                        style="cursor:pointer"
+                        onclick="openPlayer(${p.id}, 'objectives')">
 
+                        <div>
 
-                    <div>
+                            <div class="name">
+                                ${esc(p.name)}
+                            </div>
 
-                        <div class="name">
-
-                            ${esc(p.name)}
+                            <div class="meta">
+                                ${esc(p.team)}
+                                <span class="tag role-tag role-${p.role}">${p.role}</span>
+                                · Appetibilità:
+                                ${p.appeal ?? '—'}
+                            </div>
 
                         </div>
 
-
-                        <div class="meta">
-
-                            ${esc(p.team)}
-                            <span class="tag role-tag role-${p.role}">${p.role}</span>
-                            · Appetibilità:
-                            ${p.appeal ?? '—'}
-
-                        </div>
-
-                    </div>
-
-
-                    <div style="font-size:25px">
-
-                        ${
-                            current.objectives.includes(p.id)
-
-                            ? '★'
-
-                            : '☆'
-                        }
+                        <button
+                            type="button"
+                            onclick="cycleSetupObjective(${p.id}, event)"
+                            title="${state.label}"
+                            aria-label="${state.label}"
+                            style="width:46px;height:46px;border:0;background:transparent;font-size:28px;cursor:pointer;line-height:1">
+                            ${state.icon}
+                        </button>
 
                     </div>
-
 
                 </div>
-
-            </div>
-
-        `).join('');
+            `;
+        }).join('');
 
 }
 
@@ -2919,41 +2912,52 @@ function renderSetup(){
    AGGIUNGI / TOGLI OBIETTIVO
 ========================= */
 
-function toggleObjective(id){
+function cycleSetupObjective(id,event){
 
-    let i =
-        current.objectives.indexOf(id);
+    if(event) event.stopPropagation();
 
+    if(!current.objectivePriorities) current.objectivePriorities = {};
 
+    const i = current.objectives.indexOf(id);
+
+    /* ☆ → ★ : entra negli obiettivi */
     if(i < 0){
 
         current.objectives.push(id);
+        current.objectivePriorities[id] = 'base';
 
     }
 
     else{
 
-        current.objectives.splice(i,1);
+        const priority = objectivePriority(id);
+
+        /* ★ → 🔥 → ⭐ → 👍 → 🎲 → ☆ */
+        const next = {
+            base:'max',
+            max:'high',
+            high:'low',
+            low:'bet'
+        };
+
+        if(priority === 'bet'){
+
+            current.objectives.splice(i,1);
+            delete current.objectivePriorities[id];
+
+        }
+
+        else{
+
+            current.objectivePriorities[id] = next[priority] || 'max';
+
+        }
 
     }
 
-
-    /* Salva senza ridisegnare tutta l'app:
-       così la finestra "Imposta obiettivi" resta aperta. */
-
-    localStorage.setItem(
-        'AF_DB',
-        JSON.stringify(db)
-    );
-
-    localStorage.setItem(
-        'AF_CURRENT',
-        JSON.stringify(current)
-    );
-
-
-    /* Aggiorna subito la lista degli obiettivi visibile,
-       senza chiudere la finestra di selezione. */
+    /* Salva senza chiudere la finestra di impostazione. */
+    localStorage.setItem('AF_DB', JSON.stringify(db));
+    localStorage.setItem('AF_CURRENT', JSON.stringify(current));
 
     renderSetup();
 
@@ -2970,9 +2974,11 @@ function toggleObjective(id){
 ========================= */
 
 const PRIORITIES = {
-    max:  { icon:'🔥', label:'Priorità massima', order:3 },
-    high: { icon:'⭐', label:'Priorità alta', order:2 },
-    low:  { icon:'👍', label:'Interessante', order:1 }
+    max:  { icon:'🔥', label:'Priorità massima', order:5 },
+    high: { icon:'⭐', label:'Priorità alta', order:4 },
+    low:  { icon:'👍', label:'Interessante', order:3 },
+    base: { icon:'★', label:'Obiettivo', order:2 },
+    bet:  { icon:'🎲', label:'Scommessa', order:1 }
 };
 
 function objectivePriority(id){
@@ -2983,8 +2989,18 @@ function objectivePriority(id){
 function cycleObjectivePriority(id,event){
     if(event) event.stopPropagation();
     if(!current.objectivePriorities) current.objectivePriorities = {};
-    const next={low:'high',high:'max',max:'low'};
-    current.objectivePriorities[id]=next[objectivePriority(id)];
+
+    const next={
+        base:'max',
+        max:'high',
+        high:'low',
+        low:'bet',
+        bet:'max'
+    };
+
+    const currentPriority = objectivePriority(id);
+    current.objectivePriorities[id] = next[currentPriority] || 'max';
+
     persist();
     renderObjectives();
 }
