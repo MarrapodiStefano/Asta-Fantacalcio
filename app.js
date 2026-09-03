@@ -1654,13 +1654,23 @@ function recommendedOffer(player){
 
 function closePlayer(source){
 
-    // Chiudendo una scheda aperta dalla sezione Asta,
-    // liberiamo anche la ricerca precedente.
+    // Chiudendo una scheda giocatore azzeriamo SEMPRE
+    // la posizione di scorrimento e la ricerca da cui è stata aperta.
+    const sheet = $('sheet');
+    const modal = $('modal');
+
+    if(sheet) sheet.scrollTop = 0;
+    if(modal) modal.scrollTop = 0;
+
     if(source !== 'free'){
         const q = $('q');
         const results = $('results');
 
-        if(q) q.value = '';
+        if(q){
+            q.value = '';
+            q.blur();
+        }
+
         if(results) results.innerHTML = '';
     }
 
@@ -1668,7 +1678,11 @@ function closePlayer(source){
         const freeQ = $('freeQ');
         const suggestions = $('freeSuggestions');
 
-        if(freeQ) freeQ.value = '';
+        if(freeQ){
+            freeQ.value = '';
+            freeQ.blur();
+        }
+
         if(suggestions){
             suggestions.style.display = 'none';
             suggestions.innerHTML = '';
@@ -1678,6 +1692,18 @@ function closePlayer(source){
     }
 
     closeModal();
+
+    // Alcuni browser mobili possono ripristinare lo scroll dopo il click
+    // sul pulsante in fondo alla scheda: lo azzeriamo anche nei frame successivi.
+    requestAnimationFrame(() => {
+        if(sheet) sheet.scrollTop = 0;
+        if(modal) modal.scrollTop = 0;
+    });
+
+    setTimeout(() => {
+        if(sheet) sheet.scrollTop = 0;
+        if(modal) modal.scrollTop = 0;
+    }, 50);
 }
 
 function openPlayer(id, source){
@@ -1959,7 +1985,7 @@ function openPlayer(id, source){
         <button
             class="btn secondary"
             style="width:100%;margin-top:8px"
-            onclick="closePlayer('${source === 'free' ? 'free' : 'auction'}')">
+            onclick="closePlayer('${source === 'free' ? 'free' : 'auction'}'); return false;">
 
             Chiudi
 
