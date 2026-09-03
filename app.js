@@ -64,6 +64,12 @@ function persist(){
         JSON.stringify(current)
     );
 
+    const refreshBtn = $('refreshAppBtn');
+
+    if(refreshBtn){
+        refreshBtn.style.display = id === 'home' ? 'flex' : 'none';
+    }
+
     render();
 
 }
@@ -73,6 +79,53 @@ function persist(){
 /* =========================
    NAVIGAZIONE
 ========================= */
+
+/* =========================
+   AGGIORNAMENTO PWA
+========================= */
+
+async function refreshApp(){
+
+    const btn = $('refreshAppBtn');
+
+    if(btn){
+        btn.classList.add('loading');
+        btn.setAttribute('aria-label','Aggiornamento in corso');
+    }
+
+    try{
+
+        // Chiediamo esplicitamente al browser di verificare una nuova versione
+        // del Service Worker e quindi dei file pubblicati su GitHub Pages.
+        if('serviceWorker' in navigator){
+
+            const reg = await navigator.serviceWorker.getRegistration();
+
+            if(reg){
+                await reg.update();
+
+                if(reg.waiting){
+                    reg.waiting.postMessage({type:'SKIP_WAITING'});
+                }
+            }
+        }
+
+        // Piccolo intervallo per permettere l'attivazione della nuova cache.
+        setTimeout(() => {
+            window.location.reload();
+        }, 350);
+
+    }
+    catch(err){
+
+        // Anche in caso di errore nel controllo del Service Worker,
+        // eseguiamo comunque un normale refresh della pagina.
+        console.warn('Aggiornamento PWA:', err);
+
+        window.location.reload();
+    }
+}
+
 
 function go(id){
 
@@ -3319,3 +3372,12 @@ if("serviceWorker" in navigator){
         .catch(() => {});
 
 }
+
+
+// Il pulsante di aggiornamento è disponibile nella Home.
+window.addEventListener('DOMContentLoaded', () => {
+    const refreshBtn = $('refreshAppBtn');
+    if(refreshBtn){
+        refreshBtn.style.display = 'flex';
+    }
+});
