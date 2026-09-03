@@ -1477,7 +1477,7 @@ function renderFree(){
         ? arr.map(p => `
 
             <div
-                class="result"
+                class="result free-result"
                 onclick="openPlayer(${p.id}, 'free')">
 
                 <div class="head">
