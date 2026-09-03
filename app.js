@@ -1204,7 +1204,7 @@ function saveNewPlayer(){
     if(!Array.isArray(current.extraPlayers)) current.extraPlayers = [];
 
     current.extraPlayers.push({
-        id: 'manual-' + Date.now(),
+        id: -Date.now(),
         role,
         name,
         team,
