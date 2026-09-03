@@ -1958,7 +1958,7 @@ function openPlayer(id, source){
         <button
             class="btn secondary"
             style="width:100%;margin-top:8px"
-            onclick="closeModal()">
+            onclick="closePlayer('${source === 'free' ? 'free' : 'auction'}')">
 
             Chiudi
 
