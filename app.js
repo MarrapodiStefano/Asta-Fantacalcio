@@ -173,6 +173,9 @@ function closeModal(){
 
     $('modal').classList.remove('show');
 
+    // Ripristina eventuali modalità speciali a tutta pagina.
+    $('sheet').classList.remove('history-fullscreen');
+
     // Evita di conservare la precedente posizione di scorrimento.
     $('sheet').scrollTop = 0;
 
@@ -2191,6 +2194,8 @@ function assignPlayer(id){
 function openHistory(){
 
     if(!current) return;
+
+    $('sheet').classList.add('history-fullscreen');
 
     openModal(`
 
