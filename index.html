@@ -865,14 +865,21 @@ label{
 .sheet.history-fullscreen{
   max-width:none;
   width:100%;
-  height:100vh;
-  max-height:100vh;
+  height:100%;
+  max-height:none;
   margin:0;
   border-radius:0;
   padding:
-    calc(18px + env(safe-area-inset-top))
+    max(28px, calc(18px + env(safe-area-inset-top)))
     16px
-    calc(18px + env(safe-area-inset-bottom));
+    max(18px, calc(18px + env(safe-area-inset-bottom)));
+  box-sizing:border-box;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+
+.sheet.history-fullscreen .handle{
+  margin-top:0;
 }
 
 .handle{
@@ -1352,7 +1359,7 @@ label{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.9.9</span>
+        <span class="app-version">V. 2.9.10</span>
       </div>
 
       <div class="sub" id="sub">
