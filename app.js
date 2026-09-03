@@ -316,10 +316,10 @@ function createAuction(){
 
             players:[],
 
-        extraPlayers:[]
-
         })),
 
+
+        extraPlayers:[],
 
         objectives:[],
 
