@@ -1484,8 +1484,12 @@ function renderFree(){
 
                     <div>
 
-                        <div class="name">
-                            ${esc(p.name)}
+                        <div class="name free-player-name">
+                            <span>${esc(p.name)}</span>
+                            ${current.objectives.includes(p.id)
+                                ? `<span class="free-player-goal" title="${PRIORITIES[objectivePriority(p.id)].label}">${PRIORITIES[objectivePriority(p.id)].icon}</span>`
+                                : ''
+                            }
                         </div>
 
                         <div class="meta">
