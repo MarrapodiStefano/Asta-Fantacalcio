@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - 'Listone.xlsx'
+      - 'scripts/convert_listone.py'
 
 permissions:
   contents: write
