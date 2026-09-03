@@ -109,3 +109,4 @@ TARGET.write_text(
 )
 
 print(f"Generati {len(players)} giocatori in {TARGET.name}")
+# Conversione automatica: compatibile con le intestazioni del Listone aggiornato.
