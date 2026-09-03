@@ -662,7 +662,12 @@ function teamRow(t){
 
             <div>
 
-                <div class="teamname">
+                <div
+                    class="teamname teamname-open"
+                    role="button"
+                    tabindex="0"
+                    onclick="openFormation(${t.id})"
+                    onkeydown="if(event.key==='Enter' || event.key===' '){event.preventDefault();openFormation(${t.id})}">
                     ${esc(t.name)}
                 </div>
 
@@ -687,7 +692,6 @@ function teamRow(t){
     `;
 
 }
-
 
 
 /* FORMAZIONI */
