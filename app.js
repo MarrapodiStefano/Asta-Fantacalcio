@@ -306,6 +306,9 @@ function newAuction(){
         </button>
 
 
+        </div>
+
+
         <button
             class="btn secondary"
             style="width:100%;margin-top:8px"
@@ -1860,6 +1863,16 @@ function openPlayer(id, source){
 
 
             <button
+                class="player-privacy"
+                id="playerPrivacyBtn"
+                type="button"
+                onclick="togglePlayerPrivacy()"
+                aria-label="Nascondi dati privati"
+                title="Nascondi dati privati">
+                👁️
+            </button>
+
+            <button
                 class="player-close"
                 type="button"
                 onclick="closePlayer('${source === 'free' ? 'free' : 'auction'}')"
@@ -1871,6 +1884,8 @@ function openPlayer(id, source){
         </div>
 
 
+
+        <div class="player-private">
 
         <div class="kv">
 
@@ -2080,6 +2095,34 @@ function openPlayer(id, source){
 
 }
 
+
+
+/* =========================
+   MODALITÀ PRIVACY CALCIATORE
+========================= */
+
+function togglePlayerPrivacy(){
+
+    const sheet = document.querySelector('#modal .sheet');
+
+    if(!sheet) return;
+
+    const active = sheet.classList.toggle('privacy-mode');
+    const btn = $('playerPrivacyBtn');
+
+    if(btn){
+        btn.textContent = active ? '🙈' : '👁️';
+        btn.setAttribute(
+            'aria-label',
+            active ? 'Mostra dati privati' : 'Nascondi dati privati'
+        );
+        btn.setAttribute(
+            'title',
+            active ? 'Mostra dati privati' : 'Nascondi dati privati'
+        );
+    }
+
+}
 
 
 /* =========================
