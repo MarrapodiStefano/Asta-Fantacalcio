@@ -3173,7 +3173,7 @@ function renderObjectives(){
         ? arr.map(p => `
 
             <div
-                class="result"
+                class="result objective-result"
                 onclick="openPlayer(${p.id}, 'objectives')">
 
 
