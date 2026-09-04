@@ -35,7 +35,7 @@ function renderCampetti(){
       onclick="openCampetto('${team.id}')"
       aria-label="Apri campetto ${team.name}">
       <span class="campetti-crest" aria-hidden="true">${team.code}</span>
-      <span class="campetti-team-name">${team.name}</span>
+      
     </button>
   `).join('');
 }
@@ -58,7 +58,7 @@ function openCampetto(teamId){
   campettiResetZoom();
 
   if(team.id==='atalanta'){
-    image.src='./assets/campetti/atalanta.jpg';
+    image.src='./assets/campetto.JPG';
     image.alt='Campetto Atalanta';
     image.style.display='block';
     empty.style.display='none';
@@ -161,6 +161,13 @@ function initCampettiZoom(){
   });
 }
 
-window.addEventListener('DOMContentLoaded',()=>{
+function campettiBoot(){
+  renderCampetti();
   initCampettiZoom();
-});
+}
+
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded',campettiBoot,{once:true});
+}else{
+  campettiBoot();
+}
