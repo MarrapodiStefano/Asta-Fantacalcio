@@ -2,30 +2,35 @@
    CAMPETTI – SERIE A 2026/27
 ========================= */
 
+/*
+  Stemmi reali della stessa Serie A 2026/27 mostrata nel mockup.
+  Usiamo PNG diretti e trasparenti, evitando le vecchie ricostruzioni
+  geometriche e i collegamenti Wikimedia che in PWA potevano non caricarsi.
+*/
 const CAMPI_SERIE_A = [
-  ['atalanta','Atalanta','AtalantaBC.svg'],
-  ['bologna','Bologna','Bologna_F.C._1909_logo.svg'],
-  ['cagliari','Cagliari','Cagliari_Calcio_2020_logo.svg'],
-  ['como','Como','Como_1907_logo.svg'],
-  ['fiorentina','Fiorentina','ACF_Fiorentina_2.svg'],
-  ['frosinone','Frosinone','Frosinone_Calcio_logo.svg'],
-  ['genoa','Genoa','Genoa_CFC_logo.svg'],
-  ['inter','Inter','Inter_Milan.svg'],
-  ['juventus','Juventus','Juventus_FC_2017_logo.svg'],
-  ['lazio','Lazio','SS_Lazio.svg'],
-  ['lecce','Lecce','US_Lecce_logo.svg'],
-  ['milan','Milan','AC_Milan_logo.svg'],
-  ['monza','Monza','AC_Monza_logo.svg'],
-  ['napoli','Napoli','SSC_Napoli.svg'],
-  ['parma','Parma','Parma_Calcio_1913_logo.svg'],
-  ['roma','Roma','AS_Roma_logo_(2017).svg'],
-  ['sassuolo','Sassuolo','US_Sassuolo_Calcio_logo.svg'],
-  ['torino','Torino','Torino_FC_1906_logo.svg'],
-  ['udinese','Udinese','Udinese_Calcio_logo.svg'],
-  ['venezia','Venezia','Venezia_FC_logo.svg']
+  ['atalanta','Atalanta','Atalanta BC.png'],
+  ['bologna','Bologna','Bologna FC 1909.png'],
+  ['cagliari','Cagliari','Cagliari Calcio.png'],
+  ['como','Como','Como 1907.png'],
+  ['fiorentina','Fiorentina','ACF Fiorentina.png'],
+  ['frosinone','Frosinone','Frosinone Calcio.png'],
+  ['genoa','Genoa','Genoa CFC.png'],
+  ['inter','Inter','Inter Milan.png'],
+  ['juventus','Juventus','Juventus FC.png'],
+  ['lazio','Lazio','SS Lazio.png'],
+  ['lecce','Lecce','US Lecce.png'],
+  ['milan','Milan','AC Milan.png'],
+  ['monza','Monza','AC Monza.png'],
+  ['napoli','Napoli','SSC Napoli.png'],
+  ['parma','Parma','Parma Calcio 1913.png'],
+  ['roma','Roma','AS Roma.png'],
+  ['sassuolo','Sassuolo','US Sassuolo.png'],
+  ['torino','Torino','Torino FC.png'],
+  ['udinese','Udinese','Udinese Calcio.png'],
+  ['venezia','Venezia','Venezia FC.png']
 ].map(([id,name,file])=>({
   id,name,
-  crest:'https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(file)+'?width=160'
+  crest:'https://raw.githubusercontent.com/luukhopman/football-logos/master/logos/Italy%20-%20Serie%20A/'+encodeURIComponent(file)
 }));
 
 function renderCampetti(){
@@ -37,8 +42,9 @@ function renderCampetti(){
       type="button"
       onclick="openCampetto('${team.id}')"
       aria-label="Apri campetto ${team.name}">
-      <span class="campetti-crest" aria-hidden="true"><img src="${team.crest}" alt="" loading="lazy"></span>
-      
+      <span class="campetti-crest" aria-hidden="true">
+        <img src="${team.crest}" alt="" loading="eager" referrerpolicy="no-referrer">
+      </span>
     </button>
   `).join('');
 }
