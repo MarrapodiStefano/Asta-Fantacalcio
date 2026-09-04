@@ -64,7 +64,7 @@ function openCampetto(teamId){
   campettiResetZoom();
 
   if(team.id==='atalanta'){
-    image.src='./assets/campetto.JPG';
+    image.src='./assets/campetto.JPG?v=2.9.24';
     image.alt='Campetto Atalanta';
     image.style.display='block';
     empty.style.display='none';
