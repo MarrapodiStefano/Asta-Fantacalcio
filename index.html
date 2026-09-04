@@ -1410,69 +1410,41 @@ label{
 
 .campetti-team{
   min-height:112px;
-  border:1px solid var(--line);
-  border-radius:18px;
-  background:#fff;
+  border:0;
+  border-radius:0;
+  background:transparent;
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:7px;
   padding:8px 4px;
   color:var(--ink);
-  box-shadow:0 2px 10px rgba(20,30,45,.035);
+  box-shadow:none;
   cursor:pointer;
+  appearance:none;
+  -webkit-appearance:none;
 }
 
 .campetti-team:active{
-  transform:scale(.96);
+  transform:scale(.94);
 }
 
 .campetti-crest{
-  width:76px;
-  height:76px;
+  width:86px;
+  height:86px;
   display:flex;
   align-items:center;
   justify-content:center;
-  overflow:hidden;
+  overflow:visible;
+  background:transparent !important;
 }
+
 .campetti-crest img{
   width:100%;
   height:100%;
   object-fit:contain;
   display:block;
+  background:transparent;
 }
-
-.campetti-team-name{
-  max-width:100%;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  font-size:12px;
-  font-weight:850;
-}
-
-/* Colori identificativi dei club */
-.campetti-atalanta .campetti-crest{background:linear-gradient(90deg,#171a22 0 32%,#1775bc 32% 66%,#171a22 66%)}
-.campetti-bologna .campetti-crest{background:linear-gradient(90deg,#143f75 0 48%,#a11e2d 48%)}
-.campetti-cagliari .campetti-crest{background:#bd1e2d}
-.campetti-como .campetti-crest{background:linear-gradient(135deg,#1b76bd,#78c5e9)}
-.campetti-fiorentina .campetti-crest{background:#5a2782}
-.campetti-frosinone .campetti-crest{background:linear-gradient(90deg,#f2c400 0 50%,#1754a4 50%)}
-.campetti-genoa .campetti-crest{background:linear-gradient(90deg,#b1202d 0 50%,#173c70 50%)}
-.campetti-inter .campetti-crest{background:radial-gradient(circle,#101826 0 20%,#1775d1 21% 37%,#101826 38% 54%,#1775d1 55% 71%,#101826 72%)}
-.campetti-juventus .campetti-crest{background:linear-gradient(90deg,#fff 0 25%,#111 25% 75%,#fff 75%);color:#fff}
-.campetti-lazio .campetti-crest{background:#74b8df}
-.campetti-lecce .campetti-crest{background:linear-gradient(90deg,#a52a2a 0 50%,#e6d31c 50%)}
-.campetti-milan .campetti-crest{background:linear-gradient(90deg,#111 0 50%,#c6252b 50%)}
-.campetti-monza .campetti-crest{background:#d3242b}
-.campetti-napoli .campetti-crest{background:#1693d1}
-.campetti-parma .campetti-crest{background:linear-gradient(90deg,#f4d21d 0 50%,#16488b 50%)}
-.campetti-roma .campetti-crest{background:#8d1d2c;color:#f0b84d}
-.campetti-sassuolo .campetti-crest{background:linear-gradient(90deg,#111 0 33%,#25a65a 33% 66%,#111 66%)}
-.campetti-torino .campetti-crest{background:#7b1f2b}
-.campetti-udinese .campetti-crest{background:radial-gradient(circle,#111 0 32%,#fff 33% 42%,#111 43% 55%,#fff 56% 66%,#111 67%)}
-.campetti-venezia .campetti-crest{background:linear-gradient(135deg,#e7a91d 0 18%,#111 18% 58%,#0b7b54 58%)}
 
 .campetti-viewer{
   display:none;
@@ -1608,7 +1580,7 @@ body.campetti-open{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.9.21</span>
+        <span class="app-version">V. 2.9.22</span>
       </div>
 
       <div class="sub" id="sub">
