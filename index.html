@@ -1379,6 +1379,194 @@ label{
   to{transform:rotate(360deg)}
 }
 
+
+/* =========================
+   CAMPETTI
+========================= */
+#campetti{
+  padding-bottom:8px;
+}
+
+.campetti-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:2px 0 12px;
+}
+
+.campetti-title .h2{
+  margin:0;
+}
+
+.campetti-grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+}
+
+.campetti-team{
+  min-height:112px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:8px 4px;
+  color:var(--ink);
+  box-shadow:0 2px 10px rgba(20,30,45,.035);
+  cursor:pointer;
+}
+
+.campetti-team:active{
+  transform:scale(.96);
+}
+
+.campetti-crest{
+  width:58px;
+  height:66px;
+  clip-path:polygon(50% 0,92% 14%,86% 72%,50% 100%,14% 72%,8% 14%);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding-top:1px;
+  color:#fff;
+  font-size:14px;
+  font-weight:950;
+  letter-spacing:.3px;
+  text-shadow:0 1px 2px rgba(0,0,0,.25);
+  box-shadow:inset 0 0 0 2px rgba(255,255,255,.28);
+}
+
+.campetti-team-name{
+  max-width:100%;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:12px;
+  font-weight:850;
+}
+
+/* Colori identificativi dei club */
+.campetti-atalanta .campetti-crest{background:linear-gradient(90deg,#171a22 0 32%,#1775bc 32% 66%,#171a22 66%)}
+.campetti-bologna .campetti-crest{background:linear-gradient(90deg,#143f75 0 48%,#a11e2d 48%)}
+.campetti-cagliari .campetti-crest{background:#bd1e2d}
+.campetti-como .campetti-crest{background:linear-gradient(135deg,#1b76bd,#78c5e9)}
+.campetti-fiorentina .campetti-crest{background:#5a2782}
+.campetti-frosinone .campetti-crest{background:linear-gradient(90deg,#f2c400 0 50%,#1754a4 50%)}
+.campetti-genoa .campetti-crest{background:linear-gradient(90deg,#b1202d 0 50%,#173c70 50%)}
+.campetti-inter .campetti-crest{background:radial-gradient(circle,#101826 0 20%,#1775d1 21% 37%,#101826 38% 54%,#1775d1 55% 71%,#101826 72%)}
+.campetti-juventus .campetti-crest{background:linear-gradient(90deg,#fff 0 25%,#111 25% 75%,#fff 75%);color:#fff}
+.campetti-lazio .campetti-crest{background:#74b8df}
+.campetti-lecce .campetti-crest{background:linear-gradient(90deg,#a52a2a 0 50%,#e6d31c 50%)}
+.campetti-milan .campetti-crest{background:linear-gradient(90deg,#111 0 50%,#c6252b 50%)}
+.campetti-monza .campetti-crest{background:#d3242b}
+.campetti-napoli .campetti-crest{background:#1693d1}
+.campetti-parma .campetti-crest{background:linear-gradient(90deg,#f4d21d 0 50%,#16488b 50%)}
+.campetti-roma .campetti-crest{background:#8d1d2c;color:#f0b84d}
+.campetti-sassuolo .campetti-crest{background:linear-gradient(90deg,#111 0 33%,#25a65a 33% 66%,#111 66%)}
+.campetti-torino .campetti-crest{background:#7b1f2b}
+.campetti-udinese .campetti-crest{background:radial-gradient(circle,#111 0 32%,#fff 33% 42%,#111 43% 55%,#fff 56% 66%,#111 67%)}
+.campetti-venezia .campetti-crest{background:linear-gradient(135deg,#e7a91d 0 18%,#111 18% 58%,#0b7b54 58%)}
+
+.campetti-viewer{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:120;
+  background:var(--bg);
+  flex-direction:column;
+}
+
+.campetti-viewer.show{
+  display:flex;
+}
+
+.campetti-viewer-head{
+  min-height:calc(58px + env(safe-area-inset-top));
+  padding:calc(8px + env(safe-area-inset-top)) 16px 8px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  background:rgba(244,245,247,.97);
+  border-bottom:1px solid var(--line);
+}
+
+.campetti-viewer-title{
+  font-size:20px;
+  font-weight:900;
+}
+
+.campetti-close{
+  width:44px;
+  height:44px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:#fff;
+  color:var(--ink);
+  font-size:31px;
+  line-height:1;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  flex:0 0 auto;
+}
+
+.campetti-image-stage{
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+  display:flex;
+  align-items:flex-start;
+  justify-content:center;
+  background:#111827;
+  touch-action:none;
+}
+
+.campetti-image-stage img{
+  width:100%;
+  max-width:845px;
+  height:auto;
+  transform-origin:center center;
+  transition:transform .08s linear;
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+.campetti-viewer-empty{
+  flex:1;
+  padding:32px 24px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:9px;
+  color:var(--muted);
+}
+
+.campetti-viewer-empty b{
+  color:var(--ink);
+  font-size:20px;
+}
+
+.campetti-viewer-empty span{
+  font-size:14px;
+  line-height:1.45;
+}
+
+.campetti-empty-icon{
+  font-size:42px;
+}
+
+body.campetti-open{
+  overflow:hidden;
+}
+
 /* DESKTOP */
 
 @media(min-width:431px) and (pointer:fine){
@@ -1417,7 +1605,7 @@ label{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.9.16</span>
+        <span class="app-version">V. 2.9.17</span>
       </div>
 
       <div class="sub" id="sub">
@@ -1800,6 +1988,22 @@ label{
 </section>
 
 
+
+<!-- CAMPETTI -->
+<section id="campetti" class="screen">
+
+  <div class="campetti-title">
+    <div class="h2">⚽ Campetti</div>
+  </div>
+
+  <div class="meta" style="margin-top:-4px;margin-bottom:14px">
+    Seleziona una squadra per aprire la sua disposizione in campo.
+  </div>
+
+  <div id="campettiGrid" class="campetti-grid"></div>
+
+</section>
+
 <!-- ARCHIVIO -->
 
 <section id="archive" class="screen">
@@ -1836,73 +2040,54 @@ label{
 
 <nav class="bottom">
 
-
-  <button
-    class="nav active"
-    data-s="home"
-    onclick="go('home')">
-
+  <button class="nav active" data-s="home" onclick="go('home')">
     <span class="navicon">⌂</span>
-
     Home
-
   </button>
 
-
-  <button
-    class="nav"
-    data-s="auction"
-    onclick="go('auction')">
-
+  <button class="nav" data-s="auction" onclick="go('auction')">
     <span class="navicon">⌕</span>
-
     Asta
-
   </button>
 
-
-  <button
-    class="nav"
-    data-s="objectives"
-    onclick="go('objectives')">
-
+  <button class="nav" data-s="objectives" onclick="go('objectives')">
     <span class="navicon">★</span>
-
     Obiettivi
-
   </button>
 
-
-  <button
-    class="nav"
-    data-s="free"
-    onclick="go('free')"
-    aria-label="Free">
-
+  <button class="nav" data-s="free" onclick="go('free')" aria-label="Free">
     <svg class="free-player-icon" viewBox="0 0 64 64" aria-hidden="true">
       <circle cx="34" cy="9" r="7"></circle>
       <path d="M27 18c5-2 10-2 15 0l5 15-9 3-3-8 3 13 10 10-5 6-13-12-6 13-8-3 7-20-8 3-3-7 12-5z"></path>
     </svg>
-
     Free
-
   </button>
 
+  <button class="nav" data-s="campetti" onclick="go('campetti')">
+    <span class="navicon">▦</span>
+    Campetti
+  </button>
 
-  <button
-    class="nav"
-    data-s="teams"
-    onclick="go('teams')">
-
+  <button class="nav" data-s="teams" onclick="go('teams')">
     <span class="navicon">👥</span>
-
     Squadre
-
   </button>
-
 
 </nav>
 
+
+
+<!-- VISUALIZZATORE CAMPETTI -->
+<div id="campettiViewer" class="campetti-viewer" aria-hidden="true">
+  <div class="campetti-viewer-head">
+    <div id="campettiViewerTitle" class="campetti-viewer-title">Campetto</div>
+    <button class="campetti-close" type="button" onclick="closeCampetto()" aria-label="Chiudi">×</button>
+  </div>
+  <div id="campettiImageStage" class="campetti-image-stage">
+    <img id="campettiViewerImage" alt="">
+    <div id="campettiViewerEmpty" class="campetti-viewer-empty"></div>
+  </div>
+</div>
 
 </div>
 
@@ -1929,6 +2114,7 @@ label{
 <script src="players.js"></script>
 
 <script src="app.js"></script>
+<script src="campetti.js"></script>
 
 
 
