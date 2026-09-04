@@ -810,22 +810,26 @@ label{
 }
 
 .navicon{
-
   display:block;
-
-  font-size:20px;
-
-  line-height:20px;
-
-  margin-bottom:1px;
+  width:24px;
+  height:24px;
+  margin-bottom:2px;
 }
 
-.free-player-icon{
+.nav-svg{
+  width:24px;
+  height:24px;
   display:block;
-  width:22px;
-  height:22px;
-  margin-bottom:1px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:2.4;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+
+.nav-svg.fill{
   fill:currentColor;
+  stroke:none;
 }
 
 .free-search-wrap{
@@ -1605,7 +1609,7 @@ body.campetti-open{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.9.17</span>
+        <span class="app-version">V. 2.9.18</span>
       </div>
 
       <div class="sub" id="sub">
@@ -2041,35 +2045,32 @@ body.campetti-open{
 <nav class="bottom">
 
   <button class="nav active" data-s="home" onclick="go('home')">
-    <span class="navicon">⌂</span>
+    <span class="navicon"><svg class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 10.5 12 3l9 7.5"/><path d="M5.5 9.5V21h13V9.5"/><path d="M10 21v-6h4v6"/></svg></span>
     Home
   </button>
 
   <button class="nav" data-s="auction" onclick="go('auction')">
-    <span class="navicon">⌕</span>
+    <span class="navicon"><svg class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="5.5"/><path d="m15 15 5 5"/></svg></span>
     Asta
   </button>
 
   <button class="nav" data-s="objectives" onclick="go('objectives')">
-    <span class="navicon">★</span>
+    <span class="navicon"><svg class="nav-svg fill" viewBox="0 0 24 24" aria-hidden="true"><path d="m12 2.7 2.8 5.7 6.3.9-4.6 4.5 1.1 6.3-5.6-3-5.6 3 1.1-6.3-4.6-4.5 6.3-.9z"/></svg></span>
     Obiettivi
   </button>
 
   <button class="nav" data-s="free" onclick="go('free')" aria-label="Free">
-    <svg class="free-player-icon" viewBox="0 0 64 64" aria-hidden="true">
-      <circle cx="34" cy="9" r="7"></circle>
-      <path d="M27 18c5-2 10-2 15 0l5 15-9 3-3-8 3 13 10 10-5 6-13-12-6 13-8-3 7-20-8 3-3-7 12-5z"></path>
-    </svg>
+    <span class="navicon"><svg class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="13" cy="3.8" r="2.2" fill="currentColor" stroke="none"/><path d="m11.5 7.5 2.7 4.2 3.2 1.4"/><path d="m12.5 8-2.8 4.4-3.7.6"/><path d="m12.7 11.5-1.5 5.3 3.1 4.2"/><path d="m11.2 16.8-3.8 3.4"/></svg></span>
     Free
   </button>
 
   <button class="nav" data-s="campetti" onclick="go('campetti')">
-    <span class="navicon">▦</span>
+    <span class="navicon"><svg class="nav-svg" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="2.5" width="18" height="19" rx="1.5"/><path d="M12 2.5v19"/><circle cx="12" cy="12" r="2.7"/><path d="M3 7h3.5v10H3M21 7h-3.5v10H21"/></svg></span>
     Campetti
   </button>
 
   <button class="nav" data-s="teams" onclick="go('teams')">
-    <span class="navicon">👥</span>
+    <span class="navicon"><svg class="nav-svg fill" viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="7" r="3"/><circle cx="17" cy="8.5" r="2.5"/><path d="M3.5 20c0-4 2.3-6.3 5.5-6.3s5.5 2.3 5.5 6.3z"/><path d="M14 20c.1-3.1 1.8-5 4.4-5 1.4 0 2.7.6 3.6 1.8V20z"/></svg></span>
     Squadre
   </button>
 
