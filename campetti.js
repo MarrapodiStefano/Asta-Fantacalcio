@@ -3,27 +3,30 @@
 ========================= */
 
 const CAMPI_SERIE_A = [
-  ['atalanta','Atalanta','ATA'],
-  ['bologna','Bologna','BOL'],
-  ['cagliari','Cagliari','CAG'],
-  ['como','Como','COM'],
-  ['fiorentina','Fiorentina','FIO'],
-  ['frosinone','Frosinone','FRO'],
-  ['genoa','Genoa','GEN'],
-  ['inter','Inter','INT'],
-  ['juventus','Juventus','JUV'],
-  ['lazio','Lazio','LAZ'],
-  ['lecce','Lecce','LEC'],
-  ['milan','Milan','MIL'],
-  ['monza','Monza','MON'],
-  ['napoli','Napoli','NAP'],
-  ['parma','Parma','PAR'],
-  ['roma','Roma','ROM'],
-  ['sassuolo','Sassuolo','SAS'],
-  ['torino','Torino','TOR'],
-  ['udinese','Udinese','UDI'],
-  ['venezia','Venezia','VEN']
-].map(([id,name,code])=>({id,name,code}));
+  ['atalanta','Atalanta','AtalantaBC.svg'],
+  ['bologna','Bologna','Bologna_F.C._1909_logo.svg'],
+  ['cagliari','Cagliari','Cagliari_Calcio_2020_logo.svg'],
+  ['como','Como','Como_1907_logo.svg'],
+  ['fiorentina','Fiorentina','ACF_Fiorentina_2.svg'],
+  ['frosinone','Frosinone','Frosinone_Calcio_logo.svg'],
+  ['genoa','Genoa','Genoa_CFC_logo.svg'],
+  ['inter','Inter','Inter_Milan.svg'],
+  ['juventus','Juventus','Juventus_FC_2017_logo.svg'],
+  ['lazio','Lazio','SS_Lazio.svg'],
+  ['lecce','Lecce','US_Lecce_logo.svg'],
+  ['milan','Milan','AC_Milan_logo.svg'],
+  ['monza','Monza','AC_Monza_logo.svg'],
+  ['napoli','Napoli','SSC_Napoli.svg'],
+  ['parma','Parma','Parma_Calcio_1913_logo.svg'],
+  ['roma','Roma','AS_Roma_logo_(2017).svg'],
+  ['sassuolo','Sassuolo','US_Sassuolo_Calcio_logo.svg'],
+  ['torino','Torino','Torino_FC_1906_logo.svg'],
+  ['udinese','Udinese','Udinese_Calcio_logo.svg'],
+  ['venezia','Venezia','Venezia_FC_logo.svg']
+].map(([id,name,file])=>({
+  id,name,
+  crest:'https://commons.wikimedia.org/wiki/Special:FilePath/'+encodeURIComponent(file)+'?width=160'
+}));
 
 function renderCampetti(){
   const grid=document.getElementById('campettiGrid');
@@ -34,7 +37,7 @@ function renderCampetti(){
       type="button"
       onclick="openCampetto('${team.id}')"
       aria-label="Apri campetto ${team.name}">
-      <span class="campetti-crest" aria-hidden="true">${team.code}</span>
+      <span class="campetti-crest" aria-hidden="true"><img src="${team.crest}" alt="" loading="lazy"></span>
       
     </button>
   `).join('');
