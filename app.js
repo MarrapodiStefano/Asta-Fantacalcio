@@ -67,7 +67,8 @@ function persist(){
     const refreshBtn = $('refreshAppBtn');
 
     if(refreshBtn){
-        refreshBtn.style.display = id === 'home' ? 'flex' : 'none';
+        const activeScreen = document.querySelector('.screen.active')?.id;
+        refreshBtn.style.display = activeScreen === 'home' ? 'flex' : 'none';
     }
 
     render();
