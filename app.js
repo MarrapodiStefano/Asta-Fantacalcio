@@ -164,10 +164,6 @@ function go(id){
             )
         );
 
-    /* Tema visivo dedicato alla sezione Campetti */
-    document.body.classList.toggle('campetti-theme', id === 'campetti');
-
-
     render();
 
 }
