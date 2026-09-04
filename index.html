@@ -1609,7 +1609,7 @@ body.campetti-open{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.9.18</span>
+        <span class="app-version">V. 2.9.19</span>
       </div>
 
       <div class="sub" id="sub">
@@ -2115,6 +2115,43 @@ body.campetti-open{
 
 <script src="app.js"></script>
 <script src="campetti.js"></script>
+<script>
+/* Fallback di sicurezza: la griglia Campetti viene costruita direttamente
+   anche se il file esterno è ancora in cache sul dispositivo. */
+(function(){
+  const teams=[
+    ["atalanta","Atalanta","ATA"],["bologna","Bologna","BOL"],
+    ["cagliari","Cagliari","CAG"],["como","Como","COM"],
+    ["fiorentina","Fiorentina","FIO"],["frosinone","Frosinone","FRO"],
+    ["genoa","Genoa","GEN"],["inter","Inter","INT"],
+    ["juventus","Juventus","JUV"],["lazio","Lazio","LAZ"],
+    ["lecce","Lecce","LEC"],["milan","Milan","MIL"],
+    ["monza","Monza","MON"],["napoli","Napoli","NAP"],
+    ["parma","Parma","PAR"],["roma","Roma","ROM"],
+    ["sassuolo","Sassuolo","SAS"],["torino","Torino","TOR"],
+    ["udinese","Udinese","UDI"],["venezia","Venezia","VEN"]
+  ];
+
+  function paintCampetti(){
+    const grid=document.getElementById("campettiGrid");
+    if(!grid) return;
+    if(grid.children.length===teams.length) return;
+    grid.innerHTML=teams.map(function(t){
+      return '<button class="campetti-team campetti-'+t[0]+'" type="button" aria-label="Apri campetto '+t[1]+'" onclick="openCampetto(\''+t[0]+'\')">'+
+        '<span class="campetti-crest" aria-hidden="true">'+t[2]+'</span>'+
+      '</button>';
+    }).join("");
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",paintCampetti,{once:true});
+  }else{
+    paintCampetti();
+  }
+  window.addEventListener("load",paintCampetti);
+  window.paintCampetti=paintCampetti;
+})();
+</script>
 
 
 
