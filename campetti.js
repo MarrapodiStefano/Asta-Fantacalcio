@@ -45,13 +45,10 @@ function openCampetto(teamId){
   if(!team) return;
 
   const viewer=document.getElementById('campettiViewer');
-  const title=document.getElementById('campettiViewerTitle');
   const image=document.getElementById('campettiViewerImage');
   const empty=document.getElementById('campettiViewerEmpty');
 
-  if(!viewer||!title||!image||!empty) return;
-
-  title.textContent=team.name;
+  if(!viewer||!image||!empty) return;
   viewer.classList.add('show');
   document.body.classList.add('campetti-open');
 
