@@ -89,7 +89,7 @@ function openCampetto(teamId){
   const imagePath=campettiImages[team.id];
 
   if(imagePath){
-    image.src=imagePath+'?v=2.9.25';
+    image.src=imagePath+'?v=2.9.26';
     image.alt='Campetto '+team.name;
     image.style.display='block';
     empty.style.display='none';
