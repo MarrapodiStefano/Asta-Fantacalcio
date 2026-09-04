@@ -63,21 +63,46 @@ function openCampetto(teamId){
 
   campettiResetZoom();
 
-  if(team.id==='atalanta'){
-    image.src='./assets/campetto.JPG?v=2.9.24';
-    image.alt='Campetto Atalanta';
+  const campettiImages={
+    atalanta:'./assets/atalanta.jpg',
+    bologna:'./assets/bologna.PNG',
+    cagliari:'./assets/cagliari.PNG',
+    como:'./assets/como.PNG',
+    fiorentina:'./assets/fiorentina.PNG',
+    frosinone:'./assets/frosinone.PNG',
+    genoa:'./assets/genoa.PNG',
+    inter:'./assets/inter.PNG',
+    juventus:'./assets/juventus.PNG',
+    lazio:'./assets/lazio.PNG',
+    lecce:'./assets/lecce.PNG',
+    milan:'./assets/milan.jpg',
+    monza:'./assets/monza.jpg',
+    napoli:'./assets/napoli.jpg',
+    parma:'./assets/parma.PNG',
+    roma:'./assets/roma.PNG',
+    sassuolo:'./assets/sassuolo.PNG',
+    torino:'./assets/torino.PNG',
+    udinese:'./assets/udinese.PNG',
+    venezia:'./assets/venezia.PNG'
+  };
+
+  const imagePath=campettiImages[team.id];
+
+  if(imagePath){
+    image.src=imagePath+'?v=2.9.25';
+    image.alt='Campetto '+team.name;
     image.style.display='block';
     empty.style.display='none';
 
     image.onerror=()=>{
       image.style.display='none';
-      empty.innerHTML='<div class="campetti-empty-icon">⚽</div><b>Immagine Atalanta da caricare</b><span>La schermata è pronta: appena l’immagine viene inserita nella cartella dedicata comparirà qui.</span>';
+      empty.innerHTML='<div class="campetti-empty-icon">⚽</div><b>Immagine '+team.name+' non trovata</b><span>Controlliamo insieme il nome del file nella cartella assets.</span>';
       empty.style.display='flex';
     };
   }else{
     image.removeAttribute('src');
     image.style.display='none';
-    empty.innerHTML='<div class="campetti-empty-icon">⚽</div><b>Campetto '+team.name+'</b><span>Immagine non ancora caricata.</span>';
+    empty.innerHTML='<div class="campetti-empty-icon">⚽</div><b>Campetto '+team.name+'</b><span>Immagine non ancora collegata.</span>';
     empty.style.display='flex';
   }
 }
