@@ -1429,19 +1429,18 @@ label{
 }
 
 .campetti-crest{
-  width:58px;
-  height:66px;
-  clip-path:polygon(50% 0,92% 14%,86% 72%,50% 100%,14% 72%,8% 14%);
+  width:76px;
+  height:76px;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding-top:1px;
-  color:#fff;
-  font-size:14px;
-  font-weight:950;
-  letter-spacing:.3px;
-  text-shadow:0 1px 2px rgba(0,0,0,.25);
-  box-shadow:inset 0 0 0 2px rgba(255,255,255,.28);
+  overflow:hidden;
+}
+.campetti-crest img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
 }
 
 .campetti-team-name{
@@ -1609,7 +1608,7 @@ body.campetti-open{
 
       <div class="title">
         <span>Asta Fantacalcio</span>
-        <span class="app-version">V. 2.9.19</span>
+        <span class="app-version">V. 2.9.20</span>
       </div>
 
       <div class="sub" id="sub">
@@ -2115,43 +2114,7 @@ body.campetti-open{
 
 <script src="app.js"></script>
 <script src="campetti.js"></script>
-<script>
-/* Fallback di sicurezza: la griglia Campetti viene costruita direttamente
-   anche se il file esterno è ancora in cache sul dispositivo. */
-(function(){
-  const teams=[
-    ["atalanta","Atalanta","ATA"],["bologna","Bologna","BOL"],
-    ["cagliari","Cagliari","CAG"],["como","Como","COM"],
-    ["fiorentina","Fiorentina","FIO"],["frosinone","Frosinone","FRO"],
-    ["genoa","Genoa","GEN"],["inter","Inter","INT"],
-    ["juventus","Juventus","JUV"],["lazio","Lazio","LAZ"],
-    ["lecce","Lecce","LEC"],["milan","Milan","MIL"],
-    ["monza","Monza","MON"],["napoli","Napoli","NAP"],
-    ["parma","Parma","PAR"],["roma","Roma","ROM"],
-    ["sassuolo","Sassuolo","SAS"],["torino","Torino","TOR"],
-    ["udinese","Udinese","UDI"],["venezia","Venezia","VEN"]
-  ];
 
-  function paintCampetti(){
-    const grid=document.getElementById("campettiGrid");
-    if(!grid) return;
-    if(grid.children.length===teams.length) return;
-    grid.innerHTML=teams.map(function(t){
-      return '<button class="campetti-team campetti-'+t[0]+'" type="button" aria-label="Apri campetto '+t[1]+'" onclick="openCampetto(\''+t[0]+'\')">'+
-        '<span class="campetti-crest" aria-hidden="true">'+t[2]+'</span>'+
-      '</button>';
-    }).join("");
-  }
-
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",paintCampetti,{once:true});
-  }else{
-    paintCampetti();
-  }
-  window.addEventListener("load",paintCampetti);
-  window.paintCampetti=paintCampetti;
-})();
-</script>
 
 
 
